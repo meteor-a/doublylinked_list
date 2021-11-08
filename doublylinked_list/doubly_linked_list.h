@@ -40,26 +40,27 @@
 /*----------------------------------------------------------------------------------------------*/
 
 typedef int DoublyLinkListElemType;
+typedef int DoublyLinkListIndex;
 
 /*----------------------------------------------------------------------------------------------*/
 
 struct DoublyLinkListElem {
     DoublyLinkListElemType data   = 0;
-    DoublyLinkListElem* next_elem = nullptr;
-    DoublyLinkListElem* prev_elem = nullptr;
+    DoublyLinkListIndex next_elem = -1;
+    DoublyLinkListIndex prev_elem = -1;
 };
 
 struct DoublyLinkList {
-    int size       = -1;
-    int capacity   = -1;
+    DoublyLinkListIndex size       = -1;
+    DoublyLinkListIndex capacity   = -1;
     bool is_sorted = true;
 
     DoublyLinkListElem* list = nullptr;
 
-    DoublyLinkListElem* head = nullptr;
-    DoublyLinkListElem* tail = nullptr;
+    DoublyLinkListIndex head = -1;
+    DoublyLinkListIndex tail = -1;
 
-    DoublyLinkListElem* free_elems = nullptr;
+    DoublyLinkListIndex free_elem_list = -1;
 };
 
 /*----------------------------------------------------------------------------------------------*/
@@ -92,13 +93,13 @@ int _DoublyLinkListPushTail__        (DoublyLinkList* dLinkList, DoublyLinkListE
 
 #define DoublyLinkListPushAfterIndex(dLinkList, val, index_after_push) _DoublyLinkListPushAfterIndex__(dLinkList, val, index_after_push     \
                                                                 DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)}))
-int _DoublyLinkListPushAfterIndex__  (DoublyLinkList* dLinkList, DoublyLinkListElemType val, int index_after_push DEBUG_CODE_ADD(, 
-                                      LOCATION_VAR_CALL_STRUCT__ info_call));
+int _DoublyLinkListPushAfterIndex__  (DoublyLinkList* dLinkList, DoublyLinkListElemType val, DoublyLinkListIndex index_after_push 
+                                      DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
 
 #define DoublyLinkListPushBeforeIndex(dLinkList, val, index_before_push) _DoublyLinkListPushBeforeIndex__(dLinkList, val, index_before_push  \
                                                                 DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)}))
-int _DoublyLinkListPushBeforeIndex__ (DoublyLinkList* dLinkList, DoublyLinkListElemType val, int index_before_push DEBUG_CODE_ADD(, 
-                                      LOCATION_VAR_CALL_STRUCT__ info_call));
+int _DoublyLinkListPushBeforeIndex__ (DoublyLinkList* dLinkList, DoublyLinkListElemType val, DoublyLinkListIndex index_before_push 
+                                      DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -112,11 +113,13 @@ int _DoublyLinkListPopTail__         (DoublyLinkList* dLinkList DEBUG_CODE_ADD(,
 
 #define DoublyLinkListPopAfterIndex(dLinkList, index_after_push)   _DoublyLinkListPopAfterIndex__(dLinkList, index_after_push   \
                                                                    DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)}))
-int _DoublyLinkListPopAfterIndex__   (DoublyLinkList* dLinkList, int index_after_push DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
+int _DoublyLinkListPopAfterIndex__   (DoublyLinkList* dLinkList, DoublyLinkListIndex index_after_push 
+                                      DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
 
 #define DoublyLinkListPopBeforeIndex(dLinkList, index_before_push) _DoublyLinkListPushBeforeIndex__(dLinkList, index_before_push \
                                                                     DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)})
-int _DoublyLinkListPushBeforeIndex__ (DoublyLinkList* dLinkList, int index_before_push DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
+int _DoublyLinkListPushBeforeIndex__ (DoublyLinkList* dLinkList, DoublyLinkListIndex index_before_push 
+                                      DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
 
 /*----------------------------------------------------------------------------------------------*/
 
