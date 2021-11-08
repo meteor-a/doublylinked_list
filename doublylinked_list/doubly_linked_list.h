@@ -3,7 +3,7 @@
 
 /*----------------------------------------------------------------------------------------------*/
 
-#include "../bin/_mtLib/logger/logger.h"
+#include "../../bin/_mtLib/logger/logger.h"
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -69,7 +69,7 @@ struct DoublyLinkList {
                                                           LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)}))
 int _DoublyLinkListConstructor__(DoublyLinkList* dLinkList DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
 
-#define DoublyLinkListConstructor(dLinkList, capacity) _DoublyLinkListConstructor__(dLinkList, capacity DEBUG_CODE_ADD(,               \
+#define DoublyLinkListSizeConstructor(dLinkList, capacity) _DoublyLinkListConstructor__(dLinkList, capacity DEBUG_CODE_ADD(,  \
                                                           LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)}))
 int _DoublyLinkListConstructor__(DoublyLinkList* dLinkList, int capacity DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
 

@@ -1,5 +1,5 @@
 #include "doubly_linked_list.h"
-#include "../bin/_mtLib/base_lib/base_lib.h"
+#include "../../bin/_mtLib/base_lib/base_lib.h"
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -236,7 +236,7 @@ int _DoublyLinkListPushAfterIndex__  (DoublyLinkList* dLinkList, DoublyLinkListE
 
     if (index_after_push == 0) {
         return _DoublyLinkListPushHead__(dLinkList, val DEBUG_CODE_ADD(, info_call));
-    } 
+    }
     else if (index_after_push == dLinkList->size - 1) {
         return _DoublyLinkListPushTail__(dLinkList, val DEBUG_CODE_ADD(, info_call));
     }
@@ -264,7 +264,6 @@ int _DoublyLinkListPushBeforeIndex__ (DoublyLinkList* dLinkList, DoublyLinkListE
     
     DoublyLinkListOK(dLinkList)
     WARNING_DOUBLY_LINK_LIST(index_before_push > dLinkList->size || index_before_push < 1, _WARNING_PUSH_INCORRECT_INDEX__)
-
 
     if (index_before_push == 1) {
         return _DoublyLinkListPushHead__(dLinkList, val DEBUG_CODE_ADD(, info_call));
@@ -333,6 +332,10 @@ int _DoublyLinkListPopTail__(DoublyLinkList* dLinkList DEBUG_CODE_ADD(, LOCATION
     if (dLinkList->capacity - 2 * DEFAULT_DIFFERENCE_CAPACITY >= dLinkList->size) {
         return AllocateLeaseMemory(dLinkList DEBUG_CODE_ADD(, info_call));
     }
+
+    DoublyLinkListOK(dLinkList)
+
+    return EXIT_SUCCESS; 
 }
 
 int _DoublyLinkListPopAfterIndex__   (DoublyLinkList* dLinkList, DoublyLinkListIndex index_after_push 
@@ -340,6 +343,10 @@ int _DoublyLinkListPopAfterIndex__   (DoublyLinkList* dLinkList, DoublyLinkListI
 
     DoublyLinkListOK(dLinkList)
     WARNING_DOUBLY_LINK_LIST(dLinkList->size == 0, _WARNING_POP_ON_EMPTY_DOUBLY_LINK_LIST__)
+
+    if (index_after_push == dLinkList->list[dLinkList->head].next_elem) {
+
+    }
 }
 
 /*----------------------------------------------------------------------------------------------*/
@@ -356,8 +363,16 @@ int getEmptyIndex(DoublyLinkList* dLinkList  DEBUG_CODE_ADD(, LOCATION_VAR_CALL_
 int setEmptyIndex(DoublyLinkList* dLinkList, DoublyLinkListIndex index DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
     DoublyLinkListOK(dLinkList)
 
+    dLinkList->list[index].data = DEFAULT_START_DATA;
+    dLinkList->list[index].next_elem = -1;
+    dLinkList->list[index].prev_elem = -1;
+
+    dLinkList->list[index].next_elem = dLinkList->free_elem_list;
+    dLinkList->free_elem_list = index;
+
     --dLinkList->size;
 
+    DoublyLinkListOK(dLinkList)
     return EXIT_SUCCESS;
 }
 
