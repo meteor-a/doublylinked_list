@@ -3,10 +3,6 @@
 int main() {
     DoublyLinkList list = {};
     DoublyLinkListSizeConstructor(&list, 4);
-    DoublyLinkListPushHead(&list, 4);
-    DoublyLinkListPushHead(&list, 5);
-    DoublyLinkListPushHead(&list, 6);
-    DoublyLinkListPushHead(&list, 7);
     DoublyLinkListPopTail(&list);
     DoublyLinkListPushHead(&list, 8);
 

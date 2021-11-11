@@ -15,7 +15,7 @@
 
 /*----------------------------------------------------------------------------------------------*/
 
-#define DEBUG_MODE_DOUBLY_LINK_LIST   _DEBUG_MODE_DOUBLY_LINK_LIST_OFF__
+#define DEBUG_MODE_DOUBLY_LINK_LIST   _DEBUG_MODE_DOUBLY_LINK_LIST_ON__
 
 #ifndef DEBUG_MODE_DOUBLY_LINK_LIST
     #define DEBUG_MODE_DOUBLY_LINK_LIST  _DEBUG_MODE_DOUBLY_LINK_LIST_OFF__

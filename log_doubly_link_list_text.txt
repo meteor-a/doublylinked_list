@@ -1,2 +1,2 @@
-Thu Nov 11 11:26:42 2021
-  :  DOUBLY_LINKED_LIST has error: Bad pointer to the doubly linked list. WHERE: FILENAME: main.cpp;FUNCTION: main;LINE: 7; VAR: &list. Error was detecte in: FILENAME: ./doublylinked_list/doubly_linked_list.cpp;FUNCTION: _DoublyLinkListPopTail__;LINE: 369;VAR: dLinkList
+Thu Nov 11 18:03:33 2021
+  :  DOUBLY_LINKED_LIST WARNING: Try to pop on empty doubly linked list. Warning was detecte in: FILENAME: ./doublylinked_list/doubly_linked_list.cpp;FUNCTION: _DoublyLinkListPopAfterIndex__;LINE: 278;VAR: dLinkList
