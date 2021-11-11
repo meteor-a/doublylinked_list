@@ -15,7 +15,7 @@
 
 /*----------------------------------------------------------------------------------------------*/
 
-#define DEBUG_MODE_DOUBLY_LINK_LIST   _DEBUG_MODE_DOUBLY_LINK_LIST_ON__
+#define DEBUG_MODE_DOUBLY_LINK_LIST   _DEBUG_MODE_DOUBLY_LINK_LIST_OFF__
 
 #ifndef DEBUG_MODE_DOUBLY_LINK_LIST
     #define DEBUG_MODE_DOUBLY_LINK_LIST  _DEBUG_MODE_DOUBLY_LINK_LIST_OFF__
@@ -30,6 +30,10 @@
     #ifndef DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST
         #define DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST  _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_OFF__
     #endif
+
+#else
+
+    #define DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST  _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_OFF__
 
 #endif
 
@@ -72,8 +76,6 @@ struct DoublyLinkList {
 };
 
 /*----------------------------------------------------------------------------------------------*/
-
-int CreateVisualDump(DoublyLinkList* dLinkList);
 
 #define DoublyLinkListConstructor(dLinkList)              _DoublyLinkListConstructor__(dLinkList DEBUG_CODE_ADD(,            \
                                                                LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)}))

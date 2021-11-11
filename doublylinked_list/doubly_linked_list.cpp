@@ -63,11 +63,11 @@ const char* NAME_MODULE_DOUBLY_LINKED_LIST = "DOUBLY_LINKED_LIST";
     _ERROR_INFO__ _CheckBeforeConstract__(DoublyLinkList* dLinkList); 
     int CreateDump(DoublyLinkList* dLinkList); 
 
-// #if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
-//     int CreateVisualDump(DoublyLinkList* dLinkList);
-// #endif 
+ #if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
+     int CreateVisualDump(DoublyLinkList* dLinkList);
+ #endif 
 
-#elif
+#elif DEBUG_MODE_DOUBLY_LINK_LIST == _DEBUG_MODE_DOUBLY_LINK_LIST_OFF__
 
     #define DoublyLinkListOK(dLinkList) ;
     #define CheckBeforeConstract(dLinkList) ;   
@@ -389,6 +389,8 @@ int setEmptyIndex(DoublyLinkList* dLinkList, DoublyLinkListIndexType index ) {
 
 /*----------------------------------------------------------------------------------------------*/
 
+ #if DEBUG_MODE_DOUBLY_LINK_LIST == _DEBUG_MODE_DOUBLY_LINK_LIST_ON__
+
 _ERROR_INFO__ _DoublyLinkListOK__(DoublyLinkList* dLinkList) {
     _ERROR_INFO__ err = {0, "No error"};
 
@@ -445,6 +447,8 @@ _ERROR_INFO__ _CheckBeforeConstract__(DoublyLinkList* dLinkList) {
     return err;
 }
 
+#endif
+
 bool _IsInizializeElem__(DoublyLinkList* dLinkList, DoublyLinkListIndexType index) {
     if (dLinkList->list[index].data != DEFAULT_START_DATA &&
         dLinkList->list[index].next_elem != -1 &&
@@ -493,6 +497,8 @@ int _If_you_call_this_function_you_will_wake_up_very_angry_ahatina_and_she_will_
 
 /*----------------------------------------------------------------------------------------------*/
 
+#if DEBUG_MODE_DOUBLY_LINK_LIST == _DEBUG_MODE_DOUBLY_LINK_LIST_ON__
+
 int CreateDump(DoublyLinkList* dLinkList) {
     FILE* dump_file = fopen("dump_file.html", "a+");
     _WARNING_DOUBLY_LINK_LIST__(dump_file == nullptr, _WARN_CODE_CANT_OPEN_DUMP_FILE__, _WARN_TEXT_CANT_OPEN_DUMP_FILE__);
@@ -530,6 +536,9 @@ int CreateDump(DoublyLinkList* dLinkList) {
     return _ERROR_CODE_SUCCESSFULL__;
 }
 
+#endif
+
+#if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
 /*
 idea was taken from: https://github.com/mishaglik/LinkedList/blob/main/src/List.cpp
 */
@@ -588,3 +597,5 @@ int CreateVisualDump(DoublyLinkList* dLinkList) {
     fclose(graph_file);
     return _ERROR_CODE_SUCCESSFULL__;
 }
+
+#endif
