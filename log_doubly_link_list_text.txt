@@ -1,2 +1,2 @@
-Thu Nov 11 15:14:37 2021
-  :  DOUBLY_LINKED_LIST WARNING: Try to pop on empty doubly linked list. Warning was detecte in: FILENAME: ./doublylinked_list/doubly_linked_list.cpp;FUNCTION: _DoublyLinkListPopAfterIndex__;LINE: 278;VAR: dLinkList
+Thu Nov 11 23:45:48 2021
+  :  DOUBLY_LINKED_LIST has error: Size is less than zero. WHERE: FILENAME: main.cpp;FUNCTION: main;LINE: 15; VAR: &list. Error was detecte in: FILENAME: ./doublylinked_list/doubly_linked_list.cpp;FUNCTION: _If_you_call_this_function_you_will_wake_up_very_angry_ahatina_and_she_will_want_to_kill_anyone_who_she_will_be_near_if_you_want_to_save_you_live_dont_do_stupid_action_if_you_think_she_is_slow_you_are_wrong_she_is_faster_than_meteor_it_is_you_choose__;LINE: 465;VAR: dLinkList

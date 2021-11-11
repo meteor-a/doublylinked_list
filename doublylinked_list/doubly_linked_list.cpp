@@ -9,12 +9,14 @@
 
 /*----------------------------------------------------------------------------------------------*/
 
-const char* LOG_FILENAME_TEXT              = "log_doubly_link_list_text.txt";
+const char* LOG_FILENAME_TEXT              = "dump_file.html";
 const char* NAME_MODULE_DOUBLY_LINKED_LIST = "DOUBLY_LINKED_LIST";
+const char* FILENAME_DUMP                  = "dump_file.html";
 
 
 #if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
     const char* LOG_FILENAME_VISUAL        = "dump_doubly_link_list_visual.dot";
+    const char* LOG_FILENAME_VISUAL_PNG    = "dump_png/dump_doubly_link_list_visual.png";
 #endif
 
 /*----------------------------------------------------------------------------------------------*/
@@ -418,9 +420,7 @@ _ERROR_INFO__ _DoublyLinkListOK__(DoublyLinkList* dLinkList) {
         err.text_err = _ERROR_TEXT_INCORERCT_DATA_IN_ZERO_INDEX__;
     }
 
-#if DEBUG_MODE_DOUBLY_LINK_LIST == _DEBUG_MODE_DOUBLY_LINK_LIST_ON__
     // долгие проверки
-#endif
 
     return err;
 }
@@ -515,24 +515,13 @@ int CreateDump(DoublyLinkList* dLinkList) {
     fprintf(dump_file, "size = %d\ncapacity = %d\nhead = %d\ntail = %d\nfree_elems = %d\nis_sorted = %d\n\n",
             dLinkList->size, dLinkList->capacity, dLinkList->head, dLinkList->tail, dLinkList->free_elem_list_head, dLinkList->is_sorted);
     
-    fprintf(dump_file, "index ");
-    for (DoublyLinkListIndexType cur_ind = 0; cur_ind < dLinkList->size; ++cur_ind) fprintf(dump_file, " %d ", cur_ind);
-
-    fprintf(dump_file, "\ndata  ");
-    for (DoublyLinkListIndexType cur_ind = 0; cur_ind < dLinkList->size; ++cur_ind) fprintf(dump_file, " %d ", dLinkList->list[cur_ind].data);
-
-    fprintf(dump_file, "\nnext  ");
-    for (DoublyLinkListIndexType cur_ind = 0; cur_ind < dLinkList->size; ++cur_ind) fprintf(dump_file, " %d ", dLinkList->list[cur_ind].next_elem);
-
-    fprintf(dump_file, "\nprev  ");
-    for (DoublyLinkListIndexType cur_ind = 0; cur_ind < dLinkList->size; ++cur_ind) fprintf(dump_file, " %d ", dLinkList->list[cur_ind].prev_elem);
-
     fprintf(dump_file, "\n<pre>\n");
 #if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
     CreateVisualDump(dLinkList);
-    system("dot .\graph_file.dot -T png -o dump_png/photo.png");
+    system("dot .\\dump_doubly_link_list_visual.dot -T png -o dump_png/dump_doubly_link_list_visual.png");
+    fprintf(dump_file, "<p><img src=\"%s\" alt=\"Письма мастера дзен\"></p>", LOG_FILENAME_VISUAL_PNG);
 #endif
-    fprintf(dump_file, "----------------------------------------------------------------------------------------------------------");
+    fprintf(dump_file, "----------------------------------------------------------------------------------------------------------\n");
     fclose(dump_file);
     return _ERROR_CODE_SUCCESSFULL__;
 }
@@ -544,7 +533,7 @@ int CreateDump(DoublyLinkList* dLinkList) {
 idea was taken from: https://github.com/mishaglik/LinkedList/blob/main/src/List.cpp
 */
 int CreateVisualDump(DoublyLinkList* dLinkList) {
-    FILE* graph_file = fopen("graph_file.dot", "w");
+    FILE* graph_file = fopen(LOG_FILENAME_VISUAL, "w");
     _WARNING_DOUBLY_LINK_LIST__(graph_file == nullptr, _WARN_CODE_CANT_OPEN_DUMP_FILE__, _WARN_TEXT_CANT_OPEN_DUMP_FILE__);
 
     const char* default_name_node = "node_";
