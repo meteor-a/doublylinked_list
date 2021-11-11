@@ -1,0 +1,2 @@
+Thu Nov 11 11:14:05 2021
+  :  DOUBLY_LINKED_LIST has error: Bad pointer to the doubly linked list. WHERE: FILENAME: D:\vs_project\doublylinked_list\main.cpp;FUNCTION: main;LINE: 17; VAR: &list. Error was detecte in: FILENAME: D:\vs_project\doublylinked_list\doublylinked_list\doubly_linked_list.cpp;FUNCTION: _DoublyLinkListPopTail__;LINE: 367;VAR: dLinkList

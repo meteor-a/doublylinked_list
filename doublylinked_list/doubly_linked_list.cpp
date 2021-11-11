@@ -4,6 +4,7 @@
 /*----------------------------------------------------------------------------------------------*/
 
 #include <stdlib.h>
+#include <time.h> 
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -52,7 +53,7 @@
         _ERROR_INFO__ err_inf = _CheckBeforeConstract__(dLinkList);                                                      \
         if (err_inf.err_code != _ERROR_CODE_SUCCESSFULL__) {                                                             \
             CreateWarningLog(LOG_FILENAME_TEXT, NAME_MODULE_DOUBLY_LINKED_LIST, err_inf.text_err, place_where_check);    \
-            return _WARN_CODE_REPEAT_CONSTRUCTOR__;                                                                      \
+            return err_inf.err_code;                                                                                     \
         }                                                                                                                \
     }
 
@@ -68,6 +69,7 @@
     {   LOCATION_VAR_CALL_STRUCT__ place_where_check = {LOCATION_VAR__(dLinkList)};                                         \
         if (condition) {                                                                                                    \
             CreateErrorLog(LOG_FILENAME_TEXT, NAME_MODULE_DOUBLY_LINKED_LIST, err_text, place_where_check);                 \
+            CreateDump(dLinkList);                                                                                          \
             return code_err;                                                                                                \
         }                                                                                                                   \
     }
@@ -102,12 +104,14 @@ const int _WARN_CODE_REPEAT_CONSTRUCTOR__   = 101;
 const int _WARN_CODE_PUSH_INCORRECT_INDEX__ = 102;
 const int _WARN_CODE_POP_ON_EMPTY_LIST__    = 103;
 const int _WARN_CODE_POP_INCORRECT_INDEX__  = 104;
+const int _WARN_CODE_CANT_OPEN_DUMP_FILE__  = 105;
 
 /*----------------------------------------------------------------------------------------------*/
 
 const char* _WARN_TEXT_PUSH_INCORRECT_INDEX__ = "Incorect index to push";
 const char* _WARN_TEXT_POP_ON_EMPTY_LIST__    = "Try to pop on empty doubly linked list";
 const char* _WARN_TEXT_POP_INCORRECT_INDEX__  = "Try to pop on incorect index";
+const char* _WARN_TEXT_CANT_OPEN_DUMP_FILE__  = "Cant open dump file to write";
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -601,10 +605,90 @@ bool _IsInizializeElem__(DoublyLinkList* dLinkList, DoublyLinkListIndexType inde
 }
 
 int CreateDump(DoublyLinkList* dLinkList) {
+    FILE* dump_file = fopen("dump_file.html", "a+");
+    _WARNING_DOUBLY_LINK_LIST__(dump_file == nullptr, _WARN_CODE_CANT_OPEN_DUMP_FILE__, _WARN_TEXT_CANT_OPEN_DUMP_FILE__);
+
+    time_t rawtime;
+    struct tm* timeinfo;
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    fprintf(dump_file, "<pre>\n");
+    fprintf(dump_file, "%s\n\n", asctime(timeinfo));
+    fprintf(dump_file, "size = %d\ncapacity = %d\nhead = %d\ntail = %d\nfree_elems = %d\nis_sorted = %d\n\n",
+            dLinkList->size, dLinkList->capacity, dLinkList->head, dLinkList->tail, dLinkList->free_elem_list_head, dLinkList->is_sorted);
+    
+    fprintf(dump_file, "index ");
+    for (DoublyLinkListIndexType cur_ind = 0; cur_ind < dLinkList->size; ++cur_ind) fprintf(dump_file, " %d ", cur_ind);
+
+    fprintf(dump_file, "\ndata  ");
+    for (DoublyLinkListIndexType cur_ind = 0; cur_ind < dLinkList->size; ++cur_ind) fprintf(dump_file, " %d ", dLinkList->list[cur_ind].data);
+
+    fprintf(dump_file, "\nnext  ");
+    for (DoublyLinkListIndexType cur_ind = 0; cur_ind < dLinkList->size; ++cur_ind) fprintf(dump_file, " %d ", dLinkList->list[cur_ind].next_elem);
+
+    fprintf(dump_file, "\nprev  ");
+    for (DoublyLinkListIndexType cur_ind = 0; cur_ind < dLinkList->size; ++cur_ind) fprintf(dump_file, " %d ", dLinkList->list[cur_ind].prev_elem);
+
+    fprintf(dump_file, "\n<pre>\n");
+#if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
+    CreateVisualDump(dLinkList);
+#endif
+    fprintf(dump_file, "----------------------------------------------------------------------------------------------------------");
+    fclose(dump_file);
     return _ERROR_CODE_SUCCESSFULL__;
 }
 
 int CreateVisualDump(DoublyLinkList* dLinkList) {
+    FILE* graph_file = fopen("graph_file.dot", "w");
+    _WARNING_DOUBLY_LINK_LIST__(graph_file == nullptr, _WARN_CODE_CANT_OPEN_DUMP_FILE__, _WARN_TEXT_CANT_OPEN_DUMP_FILE__);
+
+    fprintf(graph_file, "digraph G");
+    fprintf(graph_file, " {\n");
+    fprintf(graph_file, "\tnode[fontsize=9];\n");
+    fprintf(graph_file, "\t{\n");
+    fprintf(graph_file, "\t\trankdir=LR;\n");
+    fprintf(graph_file, "\t\tnode[shape=plaintext];\n");
+    fprintf(graph_file, "\t\tedge[color=white];\n");
+    fprintf(graph_file, "\t\tinfo_node [shape=record, label=\"size = %d \\n capacity = %d \\n head = %d \\n tail = %d \\n free_elems_head = %d \\n is_sorted = %d\"];\n", 
+            dLinkList->size, dLinkList->capacity, dLinkList->head, dLinkList->tail, dLinkList->free_elem_list_head, dLinkList->is_sorted);
+    fprintf(graph_file, "\t}\n");
+
+    fprintf(graph_file, "\t{\n");
+
+    fprintf(graph_file, "\t\trank = same;\n");
+    fprintf(graph_file, "\t\tfree_node [label=\"prev = %d \\n data = %d \\n next = %d\"];\n", dLinkList->list[dLinkList->free_elem_list_head].prev_elem,
+        dLinkList->list[dLinkList->free_elem_list_head].data, dLinkList->list[dLinkList->free_elem_list_head].next_elem);
+
+
+    fprintf(graph_file, "\t}\n");
+
+    fprintf(graph_file, "\t{\n");
+
+    const char* standart_node_name = "node_";
+
+    fprintf(graph_file, "\t\trank = same;\n");
+    for (int cur_node = 0; cur_node < dLinkList->capacity; ++cur_node) {
+        fprintf(graph_file, "\t\t%s%d [label=\"prev = %d \\n data = %d \\n next = %d\"];\n", standart_node_name, cur_node, dLinkList->list[cur_node].prev_elem,
+                dLinkList->list[cur_node].data, dLinkList->list[cur_node].next_elem);
+    }
+
+    fprintf(graph_file, "\t}\n");
+
+    for (int cur_node = 1; cur_node < dLinkList->capacity; ++cur_node) {
+        if (dLinkList->list[cur_node].next_elem >= 0) {
+            fprintf(graph_file, "\t%s%d -> %s%d\n", standart_node_name, cur_node, standart_node_name, dLinkList->list[cur_node].next_elem);
+        }
+        if (dLinkList->list[cur_node].prev_elem >= 0) {
+            fprintf(graph_file, "\t%s%d -> %s%d\n", standart_node_name, dLinkList->list[cur_node].prev_elem, standart_node_name, cur_node);
+        }
+        if (cur_node == dLinkList->free_elem_list_head) {
+            fprintf(graph_file, "\tfree_node -> %s%d\n", standart_node_name, cur_node);
+        }
+    }
+
+    fprintf(graph_file, "}");
+
+    fclose(graph_file);
     return _ERROR_CODE_SUCCESSFULL__;
 }
 
