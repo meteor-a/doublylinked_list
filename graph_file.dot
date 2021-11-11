@@ -4,7 +4,7 @@ digraph G{
    nodesep=1;
    LE[shape="octagon", color="red", label="Error"];
    F[shape="circle", color="blue", label="Free"];
-   L0[shape="record", label=" 0 | 4 | {<lp0> 1 | <ln0> 0}"];
+   L0[shape="record", label=" 0 | 0 | {<lp0> 1 | <ln0> 0}"];
    L1[shape="record", label=" 1 | 1 | {<lp1> 2 | <ln1> 0}"];
    L2[shape="record", label=" 2 | 2 | {<lp2> 3 | <ln2> 1}"];
    L3[shape="record", label=" 3 | 3 | {<lp3> 0 | <ln3> 2}"];

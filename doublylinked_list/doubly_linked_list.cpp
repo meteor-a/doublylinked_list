@@ -242,7 +242,7 @@ int _DoublyLinkListPushHead__        (DoublyLinkList* dLinkList, DoublyLinkListE
 
     ++dLinkList->size;
 
-    if (dLinkList->size == dLinkList->capacity) {
+    if (dLinkList->size == dLinkList->capacity - 1) {
         AllocateMoreMemory(dLinkList DEBUG_CODE_ADD(, info_call));
     }
 
@@ -270,7 +270,7 @@ int _DoublyLinkListPushTail__        (DoublyLinkList* dLinkList, DoublyLinkListE
 
     ++dLinkList->size;
 
-    if (dLinkList->size == dLinkList->capacity) {
+    if (dLinkList->size == dLinkList->capacity - 1) {
         AllocateMoreMemory(dLinkList DEBUG_CODE_ADD(, info_call));
     }
 
@@ -287,6 +287,9 @@ int _DoublyLinkListPushAfterIndex__  (DoublyLinkList* dLinkList, DoublyLinkListE
     if (index_after_push == dLinkList->tail) {
         return _DoublyLinkListPushTail__(dLinkList, val DEBUG_CODE_ADD(, info_call));
     }
+    else if (index_after_push + 1 == dLinkList->head) {
+        return _DoublyLinkListPushHead__(dLinkList, val DEBUG_CODE_ADD(, info_call));
+    }
 
     DoublyLinkListIndexType ind_for_new_elem = getEmptyIndex(dLinkList);
 
@@ -299,7 +302,7 @@ int _DoublyLinkListPushAfterIndex__  (DoublyLinkList* dLinkList, DoublyLinkListE
 
     ++dLinkList->size;
 
-    if (dLinkList->size == dLinkList->capacity) {
+    if (dLinkList->size == dLinkList->capacity - 1) {
         AllocateMoreMemory(dLinkList DEBUG_CODE_ADD(, info_call));
     }
 
@@ -328,7 +331,7 @@ int _DoublyLinkListPushBeforeIndex__ (DoublyLinkList* dLinkList, DoublyLinkListE
 
     ++dLinkList->size;
 
-    if (dLinkList->size == dLinkList->capacity) {
+    if (dLinkList->size == dLinkList->capacity - 1) {
         AllocateMoreMemory(dLinkList DEBUG_CODE_ADD(, info_call));
     }
 
@@ -347,7 +350,7 @@ int _DoublyLinkListPopHead__ (DoublyLinkList* dLinkList DEBUG_CODE_ADD(, LOCATIO
     if (dLinkList->size > 1) {
         new_head = dLinkList->list[dLinkList->head].next_elem;
         dLinkList->list[new_head].prev_elem = 0;
-        dLinkList->list[dLinkList->list[dLinkList->head].next_elem].prev_elem = new_head;
+        dLinkList->list[dLinkList->list[new_head].next_elem].prev_elem = new_head;
     }
 
     --dLinkList->size;
@@ -394,13 +397,16 @@ int _DoublyLinkListPopAfterIndex__   (DoublyLinkList* dLinkList, DoublyLinkListI
                                       DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
 
     DoublyLinkListOK(dLinkList)
-    _WARNING_DOUBLY_LINK_LIST__(_IsInizializeElem__(dLinkList, index_after_pop) || index_after_pop < 0, _WARN_CODE_POP_INCORRECT_INDEX__,
+    _WARNING_DOUBLY_LINK_LIST__(!_IsInizializeElem__(dLinkList, index_after_pop) || index_after_pop < 0, _WARN_CODE_POP_INCORRECT_INDEX__,
                                 _WARN_TEXT_POP_INCORRECT_INDEX__)
 
-    if (index_after_pop == dLinkList->list[dLinkList->tail].prev_elem) {
+    if (index_after_pop + 1 == dLinkList->list[dLinkList->tail].prev_elem) {
         return _DoublyLinkListPopTail__(dLinkList DEBUG_CODE_ADD(, info_call));
-    } else if (index_after_pop == dLinkList->tail) {
+    } else if (index_after_pop + 1 == dLinkList->tail) {
         _WARNING_DOUBLY_LINK_LIST__(true, _WARN_CODE_POP_INCORRECT_INDEX__, _WARN_TEXT_POP_INCORRECT_INDEX__)
+    }
+    else if (index_after_pop + 1 == dLinkList->head) {
+        return _DoublyLinkListPopHead__(dLinkList DEBUG_CODE_ADD(, info_call));
     }
 
     DoublyLinkListIndexType deleting_elem = dLinkList->list[index_after_pop].next_elem;

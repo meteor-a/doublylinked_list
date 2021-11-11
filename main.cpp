@@ -7,6 +7,9 @@ int main() {
     DoublyLinkListPushHead(&list, 2);
     DoublyLinkListPushHead(&list, 3);
     DoublyLinkListPushTail(&list, 4);
+    DoublyLinkListPushAfterIndex(&list, 5, 2);
+    DoublyLinkListPopHead(&list);
+    DoublyLinkListPopAfterIndex(&list, 1);
  //   DoublyLinkListPushTail(&list, 5);
     CreateVisualDump(&list);
     
