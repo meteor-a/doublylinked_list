@@ -241,6 +241,8 @@ int _DoublyLinkListPushAfterIndex__  (DoublyLinkList* dLinkList, DoublyLinkListE
 
     dLinkList->list[ind_for_new_elem].data = val;
 
+    dLinkList->is_sorted = false;
+
     ++dLinkList->size;
 
     if (dLinkList->size == dLinkList->capacity - 1) {
@@ -289,6 +291,8 @@ int _DoublyLinkListPopAfterIndex__   (DoublyLinkList* dLinkList, DoublyLinkListI
         dLinkList->list[index_after_pop].next_elem = dLinkList->list[deleting_index].next_elem;
         dLinkList->list[dLinkList->list[deleting_index].next_elem].prev_elem = index_after_pop;
     }
+
+    dLinkList->is_sorted = false;
 
     --dLinkList->size;
 
@@ -454,6 +458,41 @@ bool _IsInizializeElem__(DoublyLinkList* dLinkList, DoublyLinkListIndexType inde
 
 /*----------------------------------------------------------------------------------------------*/
 
+int _If_you_call_this_function_you_will_wake_up_very_angry_ahatina_and_she_will_want_to_kill_anyone_who_she_will_be_near_if_you_want_to_save_you_live_dont_do_stupid_action_if_you_think_she_is_slow_you_are_wrong_she_is_faster_than_meteor_it_is_you_choose__(DoublyLinkList* dLinkList DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
+    DoublyLinkListOK(dLinkList)
+
+    DoublyLinkListElem* newList = (DoublyLinkListElem*) calloc(dLinkList->capacity, sizeof(DoublyLinkListElem));
+    _ERROR_DOUBLY_LINK_LIST__(newList == nullptr, _ERROR_CODE_CANT_CALLOC_MEM__, _ERROR_TEXT_CANT_CALLOC_MEM__)
+
+    newList[0] = dLinkList->list[0];
+    DoublyLinkListIndexType cur_ind_old = dLinkList->head;
+    for (DoublyLinkListIndexType cur_ind = 1; cur_ind <= dLinkList->size; ++cur_ind) {
+       newList[cur_ind].data = dLinkList->list[cur_ind_old].data;
+       newList[cur_ind].prev_elem = cur_ind - 1;
+       newList[cur_ind].next_elem = cur_ind + 1;
+       cur_ind_old = dLinkList->list[cur_ind_old].next_elem;
+    }
+    dLinkList->head = 1;
+    dLinkList->tail = dLinkList->size;
+    newList[dLinkList->tail].next_elem = 0;
+
+    free(dLinkList->list);
+    dLinkList->list = newList;
+
+    dLinkList->free_elem_list_head = dLinkList->size + 1;
+    for (DoublyLinkListIndexType cur_index = dLinkList->capacity - 1; cur_index >= dLinkList->size + 1; --cur_index) {
+        setEmptyIndex(dLinkList, cur_index);
+        dLinkList->list[cur_index].next_elem = cur_index + 1;
+    }
+    dLinkList->list[dLinkList->capacity - 1].next_elem = 0;
+
+    dLinkList->is_sorted = true;
+    
+    return _ERROR_CODE_SUCCESSFULL__;
+}
+
+/*----------------------------------------------------------------------------------------------*/
+
 int CreateDump(DoublyLinkList* dLinkList) {
     FILE* dump_file = fopen("dump_file.html", "a+");
     _WARNING_DOUBLY_LINK_LIST__(dump_file == nullptr, _WARN_CODE_CANT_OPEN_DUMP_FILE__, _WARN_TEXT_CANT_OPEN_DUMP_FILE__);
@@ -509,7 +548,7 @@ int CreateVisualDump(DoublyLinkList* dLinkList) {
     fprintf(graph_file, "   splines=ortho;\n");
     fprintf(graph_file, "   nodesep=1;\n");
     fprintf(graph_file, "   info_node[shape=\"circle\", style=\"filled\", fillcolor=\"%s\", label=\"INFO:\\nsize = %d\\ncapacity = %d\\nhead = %d\\ntail = %d\\nfree = %d\\nis_sorted = %d\"];\n",
-        "aquamarine3", dLinkList->size, dLinkList->capacity, dLinkList->head, dLinkList->tail, dLinkList->free_elem_list_head, dLinkList->free_elem_list_head);
+        "aquamarine3", dLinkList->size, dLinkList->capacity, dLinkList->head, dLinkList->tail, dLinkList->free_elem_list_head, dLinkList->is_sorted);
     fprintf(graph_file, "   free_node[shape=\"circle\", style=\"filled\", fillcolor=\"%s\", label=\"FREE SPACE\"];\n", color_empty);
 
 
