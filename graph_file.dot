@@ -1,39 +1,70 @@
-digraph G {
-	node[fontsize=9];
-	{
-		rankdir=LR;
-		node[shape=plaintext];
-		edge[color=white];
-		info_node [shape=record, label="size = -1 \n capacity = 10 \n head = 2 \n tail = 3 \n free_elems_head = 4 \n is_sorted = 1"];
-	}
-	{
-		rank = same;
-		free_node [label="prev = -1 \n data = -7854 \n next = 5"];
-	}
-	{
-		rank = same;
-		node_0 [label="prev = -1 \n data = -7854 \n next = -1"];
-		node_1 [label="prev = 2 \n data = 5 \n next = 3"];
-		node_2 [label="prev = 0 \n data = 6 \n next = 1"];
-		node_3 [label="prev = 1 \n data = 7 \n next = 0"];
-		node_4 [label="prev = -1 \n data = -7854 \n next = 5"];
-		node_5 [label="prev = -1 \n data = -7854 \n next = 6"];
-		node_6 [label="prev = -1 \n data = -7854 \n next = 7"];
-		node_7 [label="prev = -1 \n data = -7854 \n next = 8"];
-		node_8 [label="prev = -1 \n data = -7854 \n next = 9"];
-		node_9 [label="prev = -1 \n data = -7854 \n next = 0"];
-	}
-	node_1 -> node_3
-	node_2 -> node_1
-	node_2 -> node_1
-	node_0 -> node_2
-	node_3 -> node_0
-	node_1 -> node_3
-	node_4 -> node_5
-	free_node -> node_4
-	node_5 -> node_6
-	node_6 -> node_7
-	node_7 -> node_8
-	node_8 -> node_9
-	node_9 -> node_0
-}
+digraph G{
+   rankdir=LR;
+   splines=ortho;
+   nodesep=1;
+   LE[shape="octagon", color="red", label="Error"];
+   F[shape="circle", color="blue", label="Free"];
+   L0[shape="record", label=" 0 | 4 | {<lp0> 1 | <ln0> 0}"];
+   L1[shape="record", label=" 1 | 1 | {<lp1> 2 | <ln1> 0}"];
+   L2[shape="record", label=" 2 | 2 | {<lp2> 3 | <ln2> 1}"];
+   L3[shape="record", label=" 3 | 3 | {<lp3> 0 | <ln3> 2}"];
+   L4[shape="record", label=" 4 | -7854 | {<lp4> -1 | <ln4> 5}"];
+   L5[shape="record", label=" 5 | -7854 | {<lp5> -1 | <ln5> 6}"];
+   L6[shape="record", label=" 6 | -7854 | {<lp6> -1 | <ln6> 7}"];
+   L7[shape="record", label=" 7 | -7854 | {<lp7> -1 | <ln7> 8}"];
+   L8[shape="record", label=" 8 | -7854 | {<lp8> -1 | <ln8> 9}"];
+   L9[shape="record", label=" 9 | -7854 | {<lp9> -1 | <ln9> 10}"];
+   L10[shape="record", label=" 10 | -7854 | {<lp10> -1 | <ln10> 11}"];
+   L11[shape="record", label=" 11 | -7854 | {<lp11> -1 | <ln11> 12}"];
+   L12[shape="record", label=" 12 | -7854 | {<lp12> -1 | <ln12> 13}"];
+   L13[shape="record", label=" 13 | -7854 | {<lp13> -1 | <ln13> 14}"];
+   L14[shape="record", label=" 14 | -7854 | {<lp14> -1 | <ln14> 15}"];
+   L15[shape="record", label=" 15 | -7854 | {<lp15> -1 | <ln15> 16}"];
+   L16[shape="record", label=" 16 | -7854 | {<lp16> -1 | <ln16> 17}"];
+   L17[shape="record", label=" 17 | -7854 | {<lp17> -1 | <ln17> 18}"];
+   L18[shape="record", label=" 18 | -7854 | {<lp18> -1 | <ln18> 19}"];
+   L19[shape="record", label=" 19 | -7854 | {<lp19> -1 | <ln19> 0}"];
+L0->L1[color="black", weight=1000, style="invis"];
+L1->L2[color="black", weight=1000, style="invis"];
+L2->L3[color="black", weight=1000, style="invis"];
+L3->L4[color="black", weight=1000, style="invis"];
+L4->L5[color="black", weight=1000, style="invis"];
+L5->L6[color="black", weight=1000, style="invis"];
+L6->L7[color="black", weight=1000, style="invis"];
+L7->L8[color="black", weight=1000, style="invis"];
+L8->L9[color="black", weight=1000, style="invis"];
+L9->L10[color="black", weight=1000, style="invis"];
+L10->L11[color="black", weight=1000, style="invis"];
+L11->L12[color="black", weight=1000, style="invis"];
+L12->L13[color="black", weight=1000, style="invis"];
+L13->L14[color="black", weight=1000, style="invis"];
+L14->L15[color="black", weight=1000, style="invis"];
+L15->L16[color="black", weight=1000, style="invis"];
+L16->L17[color="black", weight=1000, style="invis"];
+L17->L18[color="black", weight=1000, style="invis"];
+L18->L19[color="black", weight=1000, style="invis"];
+L0->L0[color="red", constraint=false];
+L0->L1[color="red", constraint=false];
+L1->L0[color="red", constraint=false];
+L1->L2[color="red", constraint=false];
+L2->L1[color="red", constraint=false];
+L2->L3[color="red", constraint=false];
+L3->L2[color="red", constraint=false];
+L3->L0[color="red", constraint=false];
+L4->L5[color="red", constraint=false];
+L5->L6[color="red", constraint=false];
+L6->L7[color="red", constraint=false];
+L7->L8[color="red", constraint=false];
+L8->L9[color="red", constraint=false];
+L9->L10[color="red", constraint=false];
+L10->L11[color="red", constraint=false];
+L11->L12[color="red", constraint=false];
+L12->L13[color="red", constraint=false];
+L13->L14[color="red", constraint=false];
+L14->L15[color="red", constraint=false];
+L15->L16[color="red", constraint=false];
+L16->L17[color="red", constraint=false];
+L17->L18[color="red", constraint=false];
+L18->L19[color="red", constraint=false];
+L19->L0[color="red", constraint=false];
+F->L4[color="red"]}

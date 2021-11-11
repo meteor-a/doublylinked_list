@@ -2,17 +2,12 @@
 
 int main() {
     DoublyLinkList list = {};
-    DoublyLinkListSizeConstructor(&list, 10);
-    DoublyLinkListPushTail(&list, 5);
-    DoublyLinkListPushHead(&list, 6);
-    DoublyLinkListPushTail(&list, 7);
-
-    list.size = -1;
-
-    DoublyLinkListPushAfterIndex(&list, 8, 2);
-    DoublyLinkListPushBeforeIndex(&list, 9, 3);
-
-    DoublyLinkListSizeConstructor(&list, 10);
-
-    DoublyLinkListPopTail(&list);
+    DoublyLinkListSizeConstructor(&list, 4);
+    DoublyLinkListPushHead(&list, 1);
+    DoublyLinkListPushHead(&list, 2);
+    DoublyLinkListPushHead(&list, 3);
+    DoublyLinkListPushTail(&list, 4);
+ //   DoublyLinkListPushTail(&list, 5);
+    CreateVisualDump(&list);
+    
 }

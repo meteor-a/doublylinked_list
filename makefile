@@ -6,8 +6,17 @@ path_mtlib=../bin/_mtLib
 path_logger=$(path_mtlib)/logger
 path_baselib=$(path_mtlib)/base_lib
 
-dlink_list_win: $(path_dlink_list)/doubly_linked_list.cpp
-	g++ -c $(DEDFLAGS_WIN) $(path_dlink_list)/doubly_linked_list.cpp  -o doubly_linked_list_win.o
+dlink_list_win: $(path_dlink_list)/doubly_linked_list_win.o main.o $(path_mtlib)/logger/logger.o $(path_mtlib)/base_lib/base_lib.o
+	g++ $(path_dlink_list)/doubly_linked_list_win.o main.o $(path_mtlib)/logger/logger.o $(path_mtlib)/base_lib/base_lib.o
 
-dlink_list_unix: $(path_dlink_list)/doubly_linked_list.cpp
-	g++ -c $(DEDFLAGS_UNIX) $(path_dlink_list)/doubly_linked_list.cpp -o doubly_linked_list_unix.o
+dlink_list_unix: $(path_dlink_list)/doubly_linked_list_unix.o main.o $(path_mtlib)/logger/logger.o $(path_mtlib)/base_lib/base_lib.o
+	g++ $(path_dlink_list)/doubly_linked_list_unix.o main.o $(path_mtlib)/logger/logger.o $(path_mtlib)/base_lib/base_lib.o
+
+$(path_dlink_list)/doubly_linked_list_win.o: $(path_dlink_list)/doubly_linked_list.cpp
+	g++ -c $(DEDFLAGS_WIN) $(path_dlink_list)/doubly_linked_list.cpp   -o $(path_dlink_list)/doubly_linked_list_win.o
+
+$(path_dlink_list)/doubly_linked_list_unix.o: $(path_dlink_list)/doubly_linked_list.cpp
+	g++ -c $(DEDFLAGS_UNIX) $(path_dlink_list)/doubly_linked_list.cpp -o $(path_dlink_list)/doubly_linked_list_unix.o
+
+main.o: main.cpp
+	g++ -c main.cpp 

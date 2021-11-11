@@ -81,9 +81,9 @@ _ERROR_INFO__ _CheckBeforeConstract__(DoublyLinkList* dLinkList);
     int CreateDump(DoublyLinkList* dLinkList);
 #endif
 
-#if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
-    int CreateVisualDump(DoublyLinkList* dLinkList);
-#endif
+//#if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
+//    int CreateVisualDump(DoublyLinkList* dLinkList);
+//#endif
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -173,6 +173,8 @@ int _InizializeList__(DoublyLinkList* dLinkList) {
         dLinkList->list[cur_elem].next_elem = -1;
         dLinkList->list[cur_elem].prev_elem = -1;
     }
+
+    dLinkList->list[0] = { 0,0,0 };
 
     dLinkList->free_elem_list_head = 1;
     for (DoublyLinkListIndexType cur_index = 1; cur_index < dLinkList->capacity - 1; ++cur_index) {
@@ -459,6 +461,10 @@ int AllocateMoreMemory(DoublyLinkList* dLinkList  DEBUG_CODE_ADD(, LOCATION_VAR_
 
     dLinkList->capacity += DEFAULT_DIFFERENCE_CAPACITY;
 
+    for (DoublyLinkListIndexType cur_ind = dLinkList->capacity - 1; cur_ind >= dLinkList->capacity - DEFAULT_DIFFERENCE_CAPACITY; --cur_ind) {
+        setEmptyIndex(dLinkList, cur_ind);
+    }
+
     DoublyLinkListOK(dLinkList)
 
     return _ERROR_CODE_SUCCESSFULL__;
@@ -642,53 +648,34 @@ int CreateVisualDump(DoublyLinkList* dLinkList) {
     FILE* graph_file = fopen("graph_file.dot", "w");
     _WARNING_DOUBLY_LINK_LIST__(graph_file == nullptr, _WARN_CODE_CANT_OPEN_DUMP_FILE__, _WARN_TEXT_CANT_OPEN_DUMP_FILE__);
 
-    fprintf(graph_file, "digraph G");
-    fprintf(graph_file, " {\n");
-    fprintf(graph_file, "\tnode[fontsize=9];\n");
-    fprintf(graph_file, "\t{\n");
-    fprintf(graph_file, "\t\trankdir=LR;\n");
-    fprintf(graph_file, "\t\tnode[shape=plaintext];\n");
-    fprintf(graph_file, "\t\tedge[color=white];\n");
-    fprintf(graph_file, "\t\tinfo_node [shape=record, label=\"size = %d \\n capacity = %d \\n head = %d \\n tail = %d \\n free_elems_head = %d \\n is_sorted = %d\"];\n", 
-            dLinkList->size, dLinkList->capacity, dLinkList->head, dLinkList->tail, dLinkList->free_elem_list_head, dLinkList->is_sorted);
-    fprintf(graph_file, "\t}\n");
-
-    fprintf(graph_file, "\t{\n");
-
-    fprintf(graph_file, "\t\trank = same;\n");
-    fprintf(graph_file, "\t\tfree_node [label=\"prev = %d \\n data = %d \\n next = %d\"];\n", dLinkList->list[dLinkList->free_elem_list_head].prev_elem,
-        dLinkList->list[dLinkList->free_elem_list_head].data, dLinkList->list[dLinkList->free_elem_list_head].next_elem);
+    fprintf(graph_file, "digraph G{\n");
+    fprintf(graph_file, "   rankdir=LR;\n");
+    fprintf(graph_file, "   splines=ortho;\n");
+    fprintf(graph_file, "   nodesep=1;\n");
+    fprintf(graph_file, "   LE[shape=\"octagon\", color=\"red\", label=\"Error\"];\n");
+    fprintf(graph_file, "   F[shape=\"circle\", color=\"blue\", label=\"Free\"];\n");
 
 
-    fprintf(graph_file, "\t}\n");
-
-    fprintf(graph_file, "\t{\n");
-
-    const char* standart_node_name = "node_";
-
-    fprintf(graph_file, "\t\trank = same;\n");
     for (int cur_node = 0; cur_node < dLinkList->capacity; ++cur_node) {
-        fprintf(graph_file, "\t\t%s%d [label=\"prev = %d \\n data = %d \\n next = %d\"];\n", standart_node_name, cur_node, dLinkList->list[cur_node].prev_elem,
-                dLinkList->list[cur_node].data, dLinkList->list[cur_node].next_elem);
+        fprintf(graph_file, "   L%d[shape=\"record\", label=\" %lu | %d | {<lp%d> %d | <ln%d> %d}\"];\n", cur_node, cur_node, dLinkList->list[cur_node].data, cur_node, dLinkList->list[cur_node].prev_elem, cur_node, dLinkList->list[cur_node].next_elem);
     }
 
-    fprintf(graph_file, "\t}\n");
+    for (int cur_node = 0; cur_node < dLinkList->capacity - 1; ++cur_node) {
+        fprintf(graph_file, "L%d->L%d[color=\"black\", weight=1000, style=\"invis\"];\n", cur_node, cur_node + 1);
+    }
 
-    for (int cur_node = 1; cur_node < dLinkList->capacity; ++cur_node) {
-        if (dLinkList->list[cur_node].next_elem >= 0) {
-            fprintf(graph_file, "\t%s%d -> %s%d\n", standart_node_name, cur_node, standart_node_name, dLinkList->list[cur_node].next_elem);
-        }
-        if (dLinkList->list[cur_node].prev_elem >= 0) {
-            fprintf(graph_file, "\t%s%d -> %s%d\n", standart_node_name, dLinkList->list[cur_node].prev_elem, standart_node_name, cur_node);
-        }
-        if (cur_node == dLinkList->free_elem_list_head) {
-            fprintf(graph_file, "\tfree_node -> %s%d\n", standart_node_name, cur_node);
+    for (int cur_node = 0; cur_node < dLinkList->capacity; ++cur_node) {
+        fprintf(graph_file, "L%d->L%d[color=\"%s\", constraint=false];\n", cur_node, dLinkList->list[cur_node].next_elem, ((dLinkList->list[cur_node].prev_elem == -1) ? "red" : "red"));
+        if (dLinkList->list[cur_node].prev_elem != -1) {
+            fprintf(graph_file, "L%d->L%d[color=\"%s\", constraint=false];\n", cur_node, dLinkList->list[cur_node].prev_elem, "red");
         }
     }
+
+    fprintf(graph_file, "F->L%d[color=\"%s\"]", dLinkList->free_elem_list_head, "red");
+
 
     fprintf(graph_file, "}");
 
     fclose(graph_file);
     return _ERROR_CODE_SUCCESSFULL__;
 }
-

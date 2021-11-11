@@ -69,6 +69,9 @@ struct DoublyLinkList {
 
 /*----------------------------------------------------------------------------------------------*/
 
+int CreateVisualDump(DoublyLinkList* dLinkList);
+
+
 #define DoublyLinkListConstructor(dLinkList)              _DoublyLinkListConstructor__(dLinkList DEBUG_CODE_ADD(,            \
                                                                LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)}))
 int _DoublyLinkListConstructor__(DoublyLinkList* dLinkList DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
