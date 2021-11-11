@@ -1,5 +1,6 @@
 #include "doubly_linked_list.h"
 #include "../../bin/_mtLib/base_lib/base_lib.h"
+#include "doubly_linked_list_errors.h"
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -8,13 +9,12 @@
 
 /*----------------------------------------------------------------------------------------------*/
 
-#if DEBUG_MODE_DOUBLY_LINK_LIST == _DEBUG_MODE_DOUBLY_LINK_LIST_ON__ 
-    const char* LOG_FILENAME_TEXT              = "log_doubly_link_list_text.txt";
-    const char* NAME_MODULE_DOUBLY_LINKED_LIST = "DOUBLY_LINKED_LIST";
-#endif
+const char* LOG_FILENAME_TEXT              = "log_doubly_link_list_text.txt";
+const char* NAME_MODULE_DOUBLY_LINKED_LIST = "DOUBLY_LINKED_LIST";
+
 
 #if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
-    const char* LOG_FILENAME_VISUAL        = "log_doubly_link_list_visual.txt";
+    const char* LOG_FILENAME_VISUAL        = "dump_doubly_link_list_visual.dot";
 #endif
 
 /*----------------------------------------------------------------------------------------------*/
@@ -33,22 +33,7 @@
             }                                                                                                                      \
         }
 
-#elif
-
-    #define DoublyLinkListOK(dLinkList) DoublyLinkListOK__(dLinkList)
-
-    #define DoublyLinkListOK__(dLinkList)                                                   \
-        {   LOCATION_VAR_CALL_STRUCT__ place_where_check = {LOCATION_VAR__(dLinkList)};     \
-            _ERROR_INFO__ err_inf = _DoublyLinkListOK__(dLinkList);                                                                \
-            if (err_inf.err_code != _ERROR_CODE_SUCCESSFULL__) {                                                                   \
-                CreateErrorLog(LOG_FILENAME_TEXT, NAME_MODULE_DOUBLY_LINKED_LIST, err_inf.text_err, place_where_check);            \
-                return err_inf.err_code;                                                                                           \
-            }                                                                                                                      \
-        }                                                                                                                          
-
-#endif
-
-#define CheckBeforeConstract(dLinkList)                                                                                  \
+    #define CheckBeforeConstract(dLinkList)                                                                                  \
     {   LOCATION_VAR_CALL_STRUCT__ place_where_check = {LOCATION_VAR__(dLinkList)};                                      \
         _ERROR_INFO__ err_inf = _CheckBeforeConstract__(dLinkList);                                                      \
         if (err_inf.err_code != _ERROR_CODE_SUCCESSFULL__) {                                                             \
@@ -57,64 +42,41 @@
         }                                                                                                                \
     }
 
-#define _WARNING_DOUBLY_LINK_LIST__(condition, code_warn, warn_text)                                                        \
-    {   LOCATION_VAR_CALL_STRUCT__ place_where_check = {LOCATION_VAR__(dLinkList)};                                         \
-        if (condition) {                                                                                                    \
-            CreateWarningLog(LOG_FILENAME_TEXT, NAME_MODULE_DOUBLY_LINKED_LIST, warn_text, place_where_check);              \
-            return code_warn;                                                                                               \
-        }                                                                                                                   \
-    }
+    #define _WARNING_DOUBLY_LINK_LIST__(condition, code_warn, warn_text)                                                        \
+        {   LOCATION_VAR_CALL_STRUCT__ place_where_check = {LOCATION_VAR__(dLinkList)};                                         \
+            if (condition) {                                                                                                    \
+                CreateWarningLog(LOG_FILENAME_TEXT, NAME_MODULE_DOUBLY_LINKED_LIST, warn_text, place_where_check);              \
+                return code_warn;                                                                                               \
+            }                                                                                                                   \
+        }
 
-#define _ERROR_DOUBLY_LINK_LIST__(condition, code_err, err_text)                                                            \
-    {   LOCATION_VAR_CALL_STRUCT__ place_where_check = {LOCATION_VAR__(dLinkList)};                                         \
-        if (condition) {                                                                                                    \
-            CreateErrorLog(LOG_FILENAME_TEXT, NAME_MODULE_DOUBLY_LINKED_LIST, err_text, place_where_check);                 \
-            CreateDump(dLinkList);                                                                                          \
-            return code_err;                                                                                                \
-        }                                                                                                                   \
-    }
+    #define _ERROR_DOUBLY_LINK_LIST__(condition, code_err, err_text)                                                            \
+        {   LOCATION_VAR_CALL_STRUCT__ place_where_check = {LOCATION_VAR__(dLinkList)};                                         \
+            if (condition) {                                                                                                    \
+                CreateErrorLog(LOG_FILENAME_TEXT, NAME_MODULE_DOUBLY_LINKED_LIST, err_text, place_where_check);                 \
+                CreateDump(dLinkList);                                                                                          \
+                return code_err;                                                                                                \
+            }                                                                                                                   \
+        }
 
-_ERROR_INFO__ _DoublyLinkListOK__(DoublyLinkList* dLinkList);
-_ERROR_INFO__ _CheckBeforeConstract__(DoublyLinkList* dLinkList);
+    _ERROR_INFO__ _DoublyLinkListOK__(DoublyLinkList* dLinkList);
+    _ERROR_INFO__ _CheckBeforeConstract__(DoublyLinkList* dLinkList); 
+    int CreateDump(DoublyLinkList* dLinkList); 
 
-#if DEBUG_MODE_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
-    int CreateDump(DoublyLinkList* dLinkList);
+// #if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
+//     int CreateVisualDump(DoublyLinkList* dLinkList);
+// #endif 
+
+#elif
+
+    #define DoublyLinkListOK(dLinkList) ;
+    #define CheckBeforeConstract(dLinkList) ;   
+    #define _WARNING_DOUBLY_LINK_LIST__(condition, code_warn, warn_text) ;
+    #define _ERROR_DOUBLY_LINK_LIST__(condition, code_err, err_text) ;                                                                                                                       
+
 #endif
 
-//#if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
-//    int CreateVisualDump(DoublyLinkList* dLinkList);
-//#endif
-
 /*----------------------------------------------------------------------------------------------*/
-
-const int _ERROR_CODE_SUCCESSFULL__ = 0;
-const int _ERROR_CODE_INCORRECT_CAPACITY__ = 1;
-const int _ERROR_CODE_CANT_CALLOC_MEM__ = 2;
-const int _ERROR_CODE_BAD_DOUBLY_LINK_LIST_PTR__ = 3;
-
-/*----------------------------------------------------------------------------------------------*/
-
-const char* _ERROR_TEXT_INCORRECT_CAPACITY__ = "Incorrect capacity of doubly link list";
-const char* _ERROR_TEXT_CANT_CALLOC_MEM__    = "Can't calloc memory";
-const char* _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__ = "Bad pointer to the doubly linked list";
-
-/*----------------------------------------------------------------------------------------------*/
-
-const int _WARN_CODE_REPEAT_CONSTRUCTOR__   = 101;
-const int _WARN_CODE_PUSH_INCORRECT_INDEX__ = 102;
-const int _WARN_CODE_POP_ON_EMPTY_LIST__    = 103;
-const int _WARN_CODE_POP_INCORRECT_INDEX__  = 104;
-const int _WARN_CODE_CANT_OPEN_DUMP_FILE__  = 105;
-
-/*----------------------------------------------------------------------------------------------*/
-
-const char* _WARN_TEXT_PUSH_INCORRECT_INDEX__ = "Incorect index to push";
-const char* _WARN_TEXT_POP_ON_EMPTY_LIST__    = "Try to pop on empty doubly linked list";
-const char* _WARN_TEXT_POP_INCORRECT_INDEX__  = "Try to pop on incorect index";
-const char* _WARN_TEXT_CANT_OPEN_DUMP_FILE__  = "Cant open dump file to write";
-
-/*----------------------------------------------------------------------------------------------*/
-
 
 const int DEFAULT_START_CAPACITY      = 16;
 const int DEFAULT_DIFFERENCE_CAPACITY = 16;
@@ -224,79 +186,58 @@ int _DeInizializeList__    (DoublyLinkList* dLinkList) {
 int _DoublyLinkListPushHead__        (DoublyLinkList* dLinkList, DoublyLinkListElemType val DEBUG_CODE_ADD(, 
                                       LOCATION_VAR_CALL_STRUCT__ info_call)) {
 
-    DoublyLinkListOK(dLinkList)
-
-    DoublyLinkListIndexType ind_for_new_elem = getEmptyIndex(dLinkList);
-
-    dLinkList->list[ind_for_new_elem].prev_elem = 0;
-    dLinkList->list[ind_for_new_elem].next_elem = dLinkList->head;
-    if (dLinkList->size >= 1) {
-        dLinkList->list[dLinkList->head].prev_elem = ind_for_new_elem;
-    }
-    else {
-        dLinkList->tail = ind_for_new_elem;
-    }
-    dLinkList->head = ind_for_new_elem;
-
-    dLinkList->list[ind_for_new_elem].data = val;
-
-    ++dLinkList->size;
-
-    if (dLinkList->size == dLinkList->capacity - 1) {
-        AllocateMoreMemory(dLinkList DEBUG_CODE_ADD(, info_call));
-    }
-
-    return ind_for_new_elem;
+    return _DoublyLinkListPushAfterIndex__(dLinkList, val, 0 DEBUG_CODE_ADD(, info_call));
 }
 
 int _DoublyLinkListPushTail__        (DoublyLinkList* dLinkList, DoublyLinkListElemType val DEBUG_CODE_ADD(, 
                                       LOCATION_VAR_CALL_STRUCT__ info_call)) {
-
+    
     DoublyLinkListOK(dLinkList)
+    return _DoublyLinkListPushAfterIndex__(dLinkList, val, dLinkList->capacity DEBUG_CODE_ADD(, info_call));
+}
 
-    DoublyLinkListIndexType ind_for_new_elem = getEmptyIndex(dLinkList);
+int _DoublyLinkListPushBeforeIndex__ (DoublyLinkList* dLinkList, DoublyLinkListElemType val, DoublyLinkListIndexType index_before_push 
+                                      DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
 
-    dLinkList->list[ind_for_new_elem].prev_elem = dLinkList->tail;
-    dLinkList->list[ind_for_new_elem].next_elem = 0;
-    if (dLinkList->size >= 1) {
-        dLinkList->list[dLinkList->tail].next_elem = ind_for_new_elem;
-    }
-    else {
-        dLinkList->head = ind_for_new_elem;
-    }
-    dLinkList->tail = ind_for_new_elem;
-
-    dLinkList->list[ind_for_new_elem].data = val;
-
-    ++dLinkList->size;
-
-    if (dLinkList->size == dLinkList->capacity - 1) {
-        AllocateMoreMemory(dLinkList DEBUG_CODE_ADD(, info_call));
-    }
-
-    return ind_for_new_elem;
+    return _DoublyLinkListPushAfterIndex__(dLinkList, val, index_before_push - 2 DEBUG_CODE_ADD(, info_call));
 }
 
 int _DoublyLinkListPushAfterIndex__  (DoublyLinkList* dLinkList, DoublyLinkListElemType val, DoublyLinkListIndexType index_after_push 
                                       DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
 
     DoublyLinkListOK(dLinkList)
-    _WARNING_DOUBLY_LINK_LIST__(!_IsInizializeElem__(dLinkList, index_after_push) || index_after_push < 0, _WARN_CODE_PUSH_INCORRECT_INDEX__,
+    _WARNING_DOUBLY_LINK_LIST__(!_IsInizializeElem__(dLinkList, index_after_push) || index_after_push < 0,
+                                _WARN_CODE_PUSH_INCORRECT_INDEX__,
                                 _WARN_TEXT_PUSH_INCORRECT_INDEX__)
 
-    if (index_after_push == dLinkList->tail) {
-        return _DoublyLinkListPushTail__(dLinkList, val DEBUG_CODE_ADD(, info_call));
-    }
-    else if (index_after_push + 1 == dLinkList->head) {
-        return _DoublyLinkListPushHead__(dLinkList, val DEBUG_CODE_ADD(, info_call));
-    }
-
     DoublyLinkListIndexType ind_for_new_elem = getEmptyIndex(dLinkList);
+    _ERROR_DOUBLY_LINK_LIST__(ind_for_new_elem <= 0 || ind_for_new_elem > dLinkList->capacity,
+                              _ERROR_CODE_CANT_GET_EMPTY_INDEX__,
+                              _ERROR_TEXT_CANT_GET_EMPTY_INDEX__)
 
-    dLinkList->list[ind_for_new_elem].prev_elem = index_after_push;
-    dLinkList->list[ind_for_new_elem].next_elem = dLinkList->list[index_after_push].next_elem;
-    dLinkList->list[index_after_push].next_elem = ind_for_new_elem;
-    dLinkList->list[dLinkList->list[ind_for_new_elem].next_elem].prev_elem = ind_for_new_elem;
+    if (index_after_push == 0) { // PUSH HEAD 
+        dLinkList->list[ind_for_new_elem].prev_elem = 0;
+        dLinkList->list[ind_for_new_elem].next_elem = dLinkList->head;
+        if (dLinkList->size >= 1) 
+            dLinkList->list[dLinkList->head].prev_elem = ind_for_new_elem;
+        else 
+            dLinkList->tail = ind_for_new_elem;
+        dLinkList->head = ind_for_new_elem;    
+    }
+    else if (index_after_push == dLinkList->capacity) { // PUSH TAIL
+        dLinkList->list[ind_for_new_elem].prev_elem = dLinkList->tail;
+        dLinkList->list[ind_for_new_elem].next_elem = 0;
+        if (dLinkList->size >= 1) 
+            dLinkList->list[dLinkList->tail].next_elem = ind_for_new_elem;
+        else 
+            dLinkList->head = ind_for_new_elem;
+        dLinkList->tail = ind_for_new_elem;        
+    } else { // another place
+        dLinkList->list[ind_for_new_elem].prev_elem = index_after_push;
+        dLinkList->list[ind_for_new_elem].next_elem = dLinkList->list[index_after_push].next_elem;
+        dLinkList->list[index_after_push].next_elem = ind_for_new_elem;
+        dLinkList->list[dLinkList->list[ind_for_new_elem].next_elem].prev_elem = ind_for_new_elem;
+    }
 
     dLinkList->list[ind_for_new_elem].data = val;
 
@@ -309,151 +250,56 @@ int _DoublyLinkListPushAfterIndex__  (DoublyLinkList* dLinkList, DoublyLinkListE
     return ind_for_new_elem;                                     
 }
 
-int _DoublyLinkListPushBeforeIndex__ (DoublyLinkList* dLinkList, DoublyLinkListElemType val, DoublyLinkListIndexType index_before_push 
-                                      DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
-    
-    DoublyLinkListOK(dLinkList)
-    _WARNING_DOUBLY_LINK_LIST__(!_IsInizializeElem__(dLinkList, index_before_push) || index_before_push < 1, _WARN_CODE_PUSH_INCORRECT_INDEX__,
-                                                    _WARN_TEXT_PUSH_INCORRECT_INDEX__)
-
-    if (index_before_push == dLinkList->head) {
-        return _DoublyLinkListPushHead__(dLinkList, val DEBUG_CODE_ADD(, info_call));
-    } 
-
-    DoublyLinkListIndexType ind_for_new_elem = getEmptyIndex(dLinkList);
-
-    dLinkList->list[ind_for_new_elem].next_elem  = index_before_push;
-    dLinkList->list[ind_for_new_elem].prev_elem  = dLinkList->list[index_before_push].prev_elem;
-    dLinkList->list[dLinkList->list[index_before_push].prev_elem].next_elem = ind_for_new_elem;
-    dLinkList->list[index_before_push].prev_elem = ind_for_new_elem;
-
-    dLinkList->list[ind_for_new_elem].data = val;
-
-    ++dLinkList->size;
-
-    if (dLinkList->size == dLinkList->capacity - 1) {
-        AllocateMoreMemory(dLinkList DEBUG_CODE_ADD(, info_call));
-    }
-
-    DoublyLinkListOK(dLinkList)
-
-    return ind_for_new_elem;  
-}
-
 /*----------------------------------------------------------------------------------------------*/
 
 int _DoublyLinkListPopHead__ (DoublyLinkList* dLinkList DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
-    DoublyLinkListOK(dLinkList)
-    _WARNING_DOUBLY_LINK_LIST__(dLinkList->size == 0, _WARN_CODE_POP_ON_EMPTY_LIST__, _WARN_TEXT_POP_ON_EMPTY_LIST__)
-
-    DoublyLinkListIndexType new_head = 0;
-    if (dLinkList->size > 1) {
-        new_head = dLinkList->list[dLinkList->head].next_elem;
-        dLinkList->list[new_head].prev_elem = 0;
-        dLinkList->list[dLinkList->list[new_head].next_elem].prev_elem = new_head;
-    }
-
-    --dLinkList->size;
-
-    setEmptyIndex(dLinkList, dLinkList->head);
-
-    dLinkList->head = new_head;
-
-    if (dLinkList->capacity - 2 * DEFAULT_DIFFERENCE_CAPACITY >= dLinkList->size) {
-        AllocateLeaseMemory(dLinkList DEBUG_CODE_ADD(, info_call));
-    }
-
-    DoublyLinkListOK(dLinkList)
-
-    return new_head; 
+    return _DoublyLinkListPopAfterIndex__(dLinkList, 0 DEBUG_CODE_ADD(, info_call));
 }
 
 int _DoublyLinkListPopTail__(DoublyLinkList* dLinkList DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
     DoublyLinkListOK(dLinkList)
-    _WARNING_DOUBLY_LINK_LIST__(dLinkList->size == 0, _WARN_CODE_POP_ON_EMPTY_LIST__, _WARN_TEXT_POP_ON_EMPTY_LIST__)
-
-    DoublyLinkListIndexType new_tail = 0;
-    if (dLinkList->size > 1) {
-        new_tail = dLinkList->list[dLinkList->tail].prev_elem;
-        dLinkList->list[new_tail].next_elem = 0;
-    }
-
-    --dLinkList->size;
-
-    setEmptyIndex(dLinkList, dLinkList->tail);
-
-    dLinkList->tail = new_tail;
-
-    if (dLinkList->capacity - 2 * DEFAULT_DIFFERENCE_CAPACITY >= dLinkList->size) {
-        AllocateLeaseMemory(dLinkList DEBUG_CODE_ADD(, info_call));
-    }
-
-    DoublyLinkListOK(dLinkList)
-
-    return new_tail; 
-}
-
-int _DoublyLinkListPopAfterIndex__   (DoublyLinkList* dLinkList, DoublyLinkListIndexType index_after_pop 
-                                      DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
-
-    DoublyLinkListOK(dLinkList)
-    _WARNING_DOUBLY_LINK_LIST__(!_IsInizializeElem__(dLinkList, index_after_pop) || index_after_pop < 0, _WARN_CODE_POP_INCORRECT_INDEX__,
-                                _WARN_TEXT_POP_INCORRECT_INDEX__)
-
-    if (index_after_pop + 1 == dLinkList->list[dLinkList->tail].prev_elem) {
-        return _DoublyLinkListPopTail__(dLinkList DEBUG_CODE_ADD(, info_call));
-    } else if (index_after_pop + 1 == dLinkList->tail) {
-        _WARNING_DOUBLY_LINK_LIST__(true, _WARN_CODE_POP_INCORRECT_INDEX__, _WARN_TEXT_POP_INCORRECT_INDEX__)
-    }
-    else if (index_after_pop + 1 == dLinkList->head) {
-        return _DoublyLinkListPopHead__(dLinkList DEBUG_CODE_ADD(, info_call));
-    }
-
-    DoublyLinkListIndexType deleting_elem = dLinkList->list[index_after_pop].next_elem;
-    dLinkList->list[index_after_pop].next_elem = dLinkList->list[deleting_elem].next_elem;
-    dLinkList->list[dLinkList->list[deleting_elem].next_elem].prev_elem = index_after_pop;
-
-    --dLinkList->size;
-
-    setEmptyIndex(dLinkList, dLinkList->tail);
-
-    if (dLinkList->capacity - 2 * DEFAULT_DIFFERENCE_CAPACITY >= dLinkList->size) {
-        AllocateLeaseMemory(dLinkList DEBUG_CODE_ADD(, info_call));
-    }
-
-    DoublyLinkListOK(dLinkList)
-
-    return deleting_elem; 
+    return _DoublyLinkListPopAfterIndex__(dLinkList, dLinkList->capacity DEBUG_CODE_ADD(, info_call));
 }
 
 int _DoublyLinkListPopBeforeIndex__   (DoublyLinkList* dLinkList, DoublyLinkListIndexType index_before_pop 
                                       DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
 
-    DoublyLinkListOK(dLinkList)
-    _WARNING_DOUBLY_LINK_LIST__(_IsInizializeElem__(dLinkList, index_before_pop) || index_before_pop < 0, _WARN_CODE_POP_INCORRECT_INDEX__,
+    return _DoublyLinkListPopAfterIndex__(dLinkList, index_before_pop - 2 DEBUG_CODE_ADD(, info_call));
+}
+
+int _DoublyLinkListPopAfterIndex__   (DoublyLinkList* dLinkList, DoublyLinkListIndexType index_after_pop 
+                                      DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
+
+    DoublyLinkListOK(dLinkList)  
+    _WARNING_DOUBLY_LINK_LIST__(!_IsInizializeElem__(dLinkList, index_after_pop) || index_after_pop < 0, _WARN_CODE_POP_INCORRECT_INDEX__,
                                 _WARN_TEXT_POP_INCORRECT_INDEX__)
+    _WARNING_DOUBLY_LINK_LIST__(dLinkList->size == 0, _WARN_CODE_POP_ON_EMPTY_LIST__, _WARN_TEXT_POP_ON_EMPTY_LIST__)  
 
-    if (index_before_pop == dLinkList->list[dLinkList->head].next_elem) {
-        return _DoublyLinkListPopHead__(dLinkList DEBUG_CODE_ADD(, info_call));
-    } else if (index_before_pop == dLinkList->head) {
-        _WARNING_DOUBLY_LINK_LIST__(true, _WARN_CODE_POP_INCORRECT_INDEX__, _WARN_TEXT_POP_INCORRECT_INDEX__)
+    DoublyLinkListIndexType deleting_index = 0;
+    if (index_after_pop == 0) { // POP HEAD
+        deleting_index = dLinkList->head;
+        dLinkList->head = dLinkList->list[dLinkList->head].next_elem;
+        dLinkList->list[dLinkList->head].prev_elem = 0;
+    } else if (index_after_pop == dLinkList->capacity) { // POP TAIL
+        deleting_index = dLinkList->tail;
+        dLinkList->tail = dLinkList->list[dLinkList->tail].prev_elem;
+        dLinkList->list[dLinkList->tail].next_elem = 0;
+    } else { // ELSE POP
+        deleting_index = index_after_pop + 1;
+        dLinkList->list[index_after_pop].next_elem = dLinkList->list[deleting_index].next_elem;
+        dLinkList->list[dLinkList->list[deleting_index].next_elem].prev_elem = index_after_pop;
     }
-
-    DoublyLinkListIndexType deleting_elem = dLinkList->list[index_before_pop].prev_elem;
-    dLinkList->list[index_before_pop].prev_elem = dLinkList->list[deleting_elem].prev_elem;
-    dLinkList->list[dLinkList->list[deleting_elem].prev_elem].next_elem = index_before_pop;
 
     --dLinkList->size;
 
-    setEmptyIndex(dLinkList, dLinkList->tail);
+    setEmptyIndex(dLinkList, deleting_index);
 
     if (dLinkList->capacity - 2 * DEFAULT_DIFFERENCE_CAPACITY >= dLinkList->size) {
         AllocateLeaseMemory(dLinkList DEBUG_CODE_ADD(, info_call));
     }
 
     DoublyLinkListOK(dLinkList)
-
-    return deleting_elem; 
+    return deleting_index;
 }
 
 /*----------------------------------------------------------------------------------------------*/
@@ -543,24 +389,27 @@ _ERROR_INFO__ _DoublyLinkListOK__(DoublyLinkList* dLinkList) {
     _ERROR_INFO__ err = {0, "No error"};
 
     if (_IsBadReadPtr(dLinkList)) {
-        err.err_code = 1;
+        err.err_code = _ERROR_CODE_BAD_DOUBLY_LINK_LIST_PTR__;
         err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
     } 
     else if (_IsBadReadPtr(dLinkList->list)) {
-        err.err_code = 2;
-        err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
+        err.err_code = _ERROR_CODE_BAD_LIST_PTR__;
+        err.text_err = _ERROR_TEXT_BAD_LIST_PTR__;
     }
     else if (dLinkList->size > dLinkList->capacity) {
-        err.err_code = 4;
-        err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
+        err.err_code = _ERROR_CODE_SIZE_MORE_CAPACITY__;
+        err.text_err = _ERROR_TEXT_SIZE_MORE_CAPACITY__;
     }
     else if (dLinkList->size < 0) {
-        err.err_code = 5;
-        err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
+        err.err_code = _ERROR_CODE_SIZE_LESS_ZERO__;
+        err.text_err = _ERROR_TEXT_SIZE_LESS_ZERO__;
     }
     else if (dLinkList->capacity < 0) {
-        err.err_code = 6;
-        err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
+        err.err_code = _ERROR_CODE_CAPACITY_LESS_ZERO__;
+        err.text_err = _ERROR_TEXT_CAPACITY_LESS_ZERO__;
+    } else if (dLinkList->list[0].next_elem != 0 || dLinkList->list[0].prev_elem != 0 || dLinkList->list[0].data != 0) {
+        err.err_code = _ERROR_CODE_INCORERCT_DATA_IN_ZERO_INDEX__;
+        err.text_err = _ERROR_TEXT_INCORERCT_DATA_IN_ZERO_INDEX__;
     }
 
 #if DEBUG_MODE_DOUBLY_LINK_LIST == _DEBUG_MODE_DOUBLY_LINK_LIST_ON__
@@ -574,32 +423,19 @@ _ERROR_INFO__ _CheckBeforeConstract__(DoublyLinkList* dLinkList) {
     _ERROR_INFO__ err = {0, "No error"};
 
     if (_IsBadReadPtr(dLinkList)) {
-        err.err_code = 1;
-        err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
+        return { _ERROR_CODE_BAD_DOUBLY_LINK_LIST_PTR__, _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__ };
     } 
     else if (dLinkList->list != nullptr) {
-        err.err_code = 1;
-        err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
+        return { _ERROR_CODE_BAD_DOUBLY_LINK_LIST_PTR__, _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__ };
     }
-    else if (dLinkList->size != -1) {
-        err.err_code = 1;
-        err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
-    }
-    else if (dLinkList->capacity != -1) {
-        err.err_code = 1;
-        err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
-    }
-    else if (dLinkList->head != -1) {
-        err.err_code = 1;
-        err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
-    }
-    else if (dLinkList->tail != -1) {
-        err.err_code = 1;
-        err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
-    } 
-    else if (dLinkList->free_elem_list_head != -1) {
-        err.err_code = 1;
-        err.text_err = _ERROR_TEXT_BAD_DOUBLY_LINK_LIST_PTR__;
+
+    if (dLinkList->size     != -1     || 
+        dLinkList->capacity != -1     ||
+        dLinkList->head     != -1     ||
+        dLinkList->tail     != -1     || 
+        dLinkList->free_elem_list_head != -1) {
+
+        return { _WARN_CODE_REPEAT_CONSTRUCTOR__, _WARN_TEXT_REPEAT_CONSTRUCTOR__ };
     }
 
     return err;
@@ -616,6 +452,8 @@ bool _IsInizializeElem__(DoublyLinkList* dLinkList, DoublyLinkListIndexType inde
     return false;
 }
 
+/*----------------------------------------------------------------------------------------------*/
+
 int CreateDump(DoublyLinkList* dLinkList) {
     FILE* dump_file = fopen("dump_file.html", "a+");
     _WARNING_DOUBLY_LINK_LIST__(dump_file == nullptr, _WARN_CODE_CANT_OPEN_DUMP_FILE__, _WARN_TEXT_CANT_OPEN_DUMP_FILE__);
@@ -624,8 +462,11 @@ int CreateDump(DoublyLinkList* dLinkList) {
     struct tm* timeinfo;
     time(&rawtime);
     timeinfo = localtime(&rawtime);
+
     fprintf(dump_file, "<pre>\n");
+
     fprintf(dump_file, "%s\n\n", asctime(timeinfo));
+
     fprintf(dump_file, "size = %d\ncapacity = %d\nhead = %d\ntail = %d\nfree_elems = %d\nis_sorted = %d\n\n",
             dLinkList->size, dLinkList->capacity, dLinkList->head, dLinkList->tail, dLinkList->free_elem_list_head, dLinkList->is_sorted);
     
@@ -650,34 +491,57 @@ int CreateDump(DoublyLinkList* dLinkList) {
     return _ERROR_CODE_SUCCESSFULL__;
 }
 
+/*
+idea was taken from: https://github.com/mishaglik/LinkedList/blob/main/src/List.cpp
+*/
 int CreateVisualDump(DoublyLinkList* dLinkList) {
     FILE* graph_file = fopen("graph_file.dot", "w");
     _WARNING_DOUBLY_LINK_LIST__(graph_file == nullptr, _WARN_CODE_CANT_OPEN_DUMP_FILE__, _WARN_TEXT_CANT_OPEN_DUMP_FILE__);
+
+    const char* default_name_node = "node_";
+    char color_all[20]   = "beige";
+    char color_head[20]  = "green4";
+    char color_tail[20]  = "brown1";
+    char color_empty[20] = "chartreuse1";
 
     fprintf(graph_file, "digraph G{\n");
     fprintf(graph_file, "   rankdir=LR;\n");
     fprintf(graph_file, "   splines=ortho;\n");
     fprintf(graph_file, "   nodesep=1;\n");
-    fprintf(graph_file, "   LE[shape=\"octagon\", color=\"red\", label=\"Error\"];\n");
-    fprintf(graph_file, "   F[shape=\"circle\", color=\"blue\", label=\"Free\"];\n");
+    fprintf(graph_file, "   info_node[shape=\"circle\", style=\"filled\", fillcolor=\"%s\", label=\"INFO:\\nsize = %d\\ncapacity = %d\\nhead = %d\\ntail = %d\\nfree = %d\\nis_sorted = %d\"];\n",
+        "aquamarine3", dLinkList->size, dLinkList->capacity, dLinkList->head, dLinkList->tail, dLinkList->free_elem_list_head, dLinkList->free_elem_list_head);
+    fprintf(graph_file, "   free_node[shape=\"circle\", style=\"filled\", fillcolor=\"%s\", label=\"FREE SPACE\"];\n", color_empty);
 
 
     for (int cur_node = 0; cur_node < dLinkList->capacity; ++cur_node) {
-        fprintf(graph_file, "   L%d[shape=\"record\", label=\" %lu | %d | {<lp%d> %d | <ln%d> %d}\"];\n", cur_node, cur_node, dLinkList->list[cur_node].data, cur_node, dLinkList->list[cur_node].prev_elem, cur_node, dLinkList->list[cur_node].next_elem);
+        char* color = color_all;
+        if (cur_node == dLinkList->head) {
+            color = color_head;
+        }
+        else if (cur_node == dLinkList->tail) {
+            color = color_tail;
+        }
+        else if (dLinkList->list[cur_node].prev_elem == -1) {
+            color = color_empty;
+        }
+        fprintf(graph_file, "   %s%d[shape=\"record\", style=\"filled\", fillcolor=\"%s\", label=\" ind = %d | data = %d | { prev = %d | next = %d}\"];\n", default_name_node, cur_node,
+            color, cur_node, dLinkList->list[cur_node].data, dLinkList->list[cur_node].prev_elem, dLinkList->list[cur_node].next_elem);
     }
 
     for (int cur_node = 0; cur_node < dLinkList->capacity - 1; ++cur_node) {
-        fprintf(graph_file, "L%d->L%d[color=\"black\", weight=1000, style=\"invis\"];\n", cur_node, cur_node + 1);
+        fprintf(graph_file, "   %s%d->%s%d[color=\"black\", weight=1000, style=\"invis\"];\n", default_name_node, cur_node, default_name_node, cur_node + 1);
     }
 
-    for (int cur_node = 0; cur_node < dLinkList->capacity; ++cur_node) {
-        fprintf(graph_file, "L%d->L%d[color=\"%s\", constraint=false];\n", cur_node, dLinkList->list[cur_node].next_elem, ((dLinkList->list[cur_node].prev_elem == -1) ? "red" : "red"));
+    for (int cur_node = 1; cur_node < dLinkList->capacity; ++cur_node) {
+        fprintf(graph_file, "   %s%d->%s%d[color=\"%s\", constraint=false];\n", default_name_node, cur_node, default_name_node, 
+                dLinkList->list[cur_node].next_elem, ((dLinkList->list[cur_node].prev_elem == -1) ? "forestgreen" : "red"));
         if (dLinkList->list[cur_node].prev_elem != -1) {
-            fprintf(graph_file, "L%d->L%d[color=\"%s\", constraint=false];\n", cur_node, dLinkList->list[cur_node].prev_elem, "red");
+            fprintf(graph_file, "   %s%d->%s%d[color=\"%s\", constraint=false];\n", default_name_node, cur_node, default_name_node, 
+                    dLinkList->list[cur_node].prev_elem, "red");
         }
     }
 
-    fprintf(graph_file, "F->L%d[color=\"%s\"]", dLinkList->free_elem_list_head, "red");
+    fprintf(graph_file, "   free_node->%s%d[color=\"%s\"]", default_name_node, dLinkList->free_elem_list_head, "forestgreen");
 
 
     fprintf(graph_file, "}");

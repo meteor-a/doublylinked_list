@@ -23,10 +23,14 @@
 
 /*----------------------------------------------------------------------------------------------*/
 
-#define DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST  _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
+#if DEBUG_MODE_DOUBLY_LINK_LIST == _DEBUG_MODE_DOUBLY_LINK_LIST_ON__
 
-#ifndef DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST
-    #define DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST  _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_OFF__
+    #define DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST  _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
+
+    #ifndef DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST
+        #define DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST  _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_OFF__
+    #endif
+
 #endif
 
 /*----------------------------------------------------------------------------------------------*/
@@ -70,7 +74,6 @@ struct DoublyLinkList {
 /*----------------------------------------------------------------------------------------------*/
 
 int CreateVisualDump(DoublyLinkList* dLinkList);
-
 
 #define DoublyLinkListConstructor(dLinkList)              _DoublyLinkListConstructor__(dLinkList DEBUG_CODE_ADD(,            \
                                                                LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)}))
@@ -124,7 +127,7 @@ int _DoublyLinkListPopAfterIndex__   (DoublyLinkList* dLinkList, DoublyLinkListI
                                       DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
 
 #define DoublyLinkListPopBeforeIndex(dLinkList, index_before_pop) _DoublyLinkListPopBeforeIndex__(dLinkList, index_before_pop \
-                                                                    DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)})
+                                                                    DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)}))
 int _DoublyLinkListPopBeforeIndex__ (DoublyLinkList* dLinkList, DoublyLinkListIndexType index_before_pop 
                                       DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
 

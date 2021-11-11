@@ -3,14 +3,10 @@
 int main() {
     DoublyLinkList list = {};
     DoublyLinkListSizeConstructor(&list, 4);
-    DoublyLinkListPushHead(&list, 1);
-    DoublyLinkListPushHead(&list, 2);
-    DoublyLinkListPushHead(&list, 3);
-    DoublyLinkListPushTail(&list, 4);
-    DoublyLinkListPushAfterIndex(&list, 5, 2);
-    DoublyLinkListPopHead(&list);
-    DoublyLinkListPopAfterIndex(&list, 1);
- //   DoublyLinkListPushTail(&list, 5);
+    DoublyLinkListPushHead(&list, 4);
+    DoublyLinkListPushHead(&list, 5);
+    DoublyLinkListPushHead(&list, 6);
+
     CreateVisualDump(&list);
     
 }
