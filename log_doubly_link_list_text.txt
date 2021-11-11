@@ -1,2 +1,2 @@
-Thu Nov 11 18:03:33 2021
+Thu Nov 11 15:14:37 2021
   :  DOUBLY_LINKED_LIST WARNING: Try to pop on empty doubly linked list. Warning was detecte in: FILENAME: ./doublylinked_list/doubly_linked_list.cpp;FUNCTION: _DoublyLinkListPopAfterIndex__;LINE: 278;VAR: dLinkList

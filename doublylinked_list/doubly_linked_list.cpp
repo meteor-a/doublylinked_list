@@ -101,7 +101,7 @@ int _DoublyLinkListConstructor__(DoublyLinkList* dLinkList DEBUG_CODE_ADD(, LOCA
     dLinkList->capacity  = DEFAULT_START_CAPACITY;
     dLinkList->is_sorted = true;
 
-    dLinkList->list = (DoublyLinkListElem*) calloc(dLinkList->capacity, sizeof(DoublyLinkListElem));
+    dLinkList->list = (DoublyLinkListElem*) calloc((size_t) dLinkList->capacity, sizeof(DoublyLinkListElem));
     _ERROR_DOUBLY_LINK_LIST__(dLinkList->list == nullptr, _ERROR_CODE_CANT_CALLOC_MEM__, _ERROR_TEXT_CANT_CALLOC_MEM__)
 
     _InizializeList__(dLinkList);
@@ -119,7 +119,7 @@ int _DoublyLinkListConstructor__(DoublyLinkList* dLinkList, int capacity DEBUG_C
     dLinkList->capacity  = capacity;
     dLinkList->is_sorted = true;
 
-    dLinkList->list = (DoublyLinkListElem*) calloc(dLinkList->capacity, sizeof(DoublyLinkListElem));
+    dLinkList->list = (DoublyLinkListElem*) calloc((size_t)dLinkList->capacity, sizeof(DoublyLinkListElem));
     _ERROR_DOUBLY_LINK_LIST__(dLinkList->list == nullptr, _ERROR_CODE_CANT_CALLOC_MEM__, _ERROR_TEXT_CANT_CALLOC_MEM__)
 
     _InizializeList__(dLinkList);
@@ -312,7 +312,7 @@ int AllocateMoreMemory(DoublyLinkList* dLinkList  DEBUG_CODE_ADD(, LOCATION_VAR_
     DoublyLinkListOK(dLinkList)
 
     dLinkList->list = (DoublyLinkListElem*) realloc(dLinkList->list, 
-                                                    (dLinkList->capacity + DEFAULT_DIFFERENCE_CAPACITY) * sizeof(DoublyLinkListElem));
+                                                    ((long unsigned int)(dLinkList->capacity + DEFAULT_DIFFERENCE_CAPACITY) * sizeof(DoublyLinkListElem)));
     _ERROR_DOUBLY_LINK_LIST__(dLinkList->list == nullptr, _ERROR_CODE_CANT_CALLOC_MEM__, _ERROR_TEXT_CANT_CALLOC_MEM__)
 
     dLinkList->capacity += DEFAULT_DIFFERENCE_CAPACITY;
@@ -352,7 +352,7 @@ int AllocateLeaseMemory(DoublyLinkList* dLinkList  DEBUG_CODE_ADD(, LOCATION_VAR
     }
 
     dLinkList->list = (DoublyLinkListElem*) realloc(dLinkList->list, 
-                                                    (dLinkList->capacity - DEFAULT_DIFFERENCE_CAPACITY) * sizeof(DoublyLinkListElem));
+                                                    (long unsigned int)(dLinkList->capacity - DEFAULT_DIFFERENCE_CAPACITY) * sizeof(DoublyLinkListElem));
     _ERROR_DOUBLY_LINK_LIST__(dLinkList->list == nullptr, _ERROR_CODE_CANT_CALLOC_MEM__, _ERROR_TEXT_CANT_CALLOC_MEM__)
 
     dLinkList->capacity -= DEFAULT_DIFFERENCE_CAPACITY;
@@ -465,7 +465,7 @@ bool _IsInizializeElem__(DoublyLinkList* dLinkList, DoublyLinkListIndexType inde
 int _If_you_call_this_function_you_will_wake_up_very_angry_ahatina_and_she_will_want_to_kill_anyone_who_she_will_be_near_if_you_want_to_save_you_live_dont_do_stupid_action_if_you_think_she_is_slow_you_are_wrong_she_is_faster_than_meteor_it_is_you_choose__(DoublyLinkList* dLinkList DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
     DoublyLinkListOK(dLinkList)
 
-    DoublyLinkListElem* newList = (DoublyLinkListElem*) calloc(dLinkList->capacity, sizeof(DoublyLinkListElem));
+    DoublyLinkListElem* newList = (DoublyLinkListElem*) calloc((size_t)dLinkList->capacity, sizeof(DoublyLinkListElem));
     _ERROR_DOUBLY_LINK_LIST__(newList == nullptr, _ERROR_CODE_CANT_CALLOC_MEM__, _ERROR_TEXT_CANT_CALLOC_MEM__)
 
     newList[0] = dLinkList->list[0];
@@ -530,6 +530,7 @@ int CreateDump(DoublyLinkList* dLinkList) {
     fprintf(dump_file, "\n<pre>\n");
 #if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
     CreateVisualDump(dLinkList);
+    system("dot .\graph_file.dot -T png -o dump_png/photo.png");
 #endif
     fprintf(dump_file, "----------------------------------------------------------------------------------------------------------");
     fclose(dump_file);
