@@ -136,6 +136,10 @@ int _DoublyLinkListPopBeforeIndex__ (DoublyLinkList* dLinkList, DoublyLinkListIn
 
 /*----------------------------------------------------------------------------------------------*/
 
+#define getByLogicalIndex(...) _getByLogicalIndex__(__VA_ARGS__ DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)})) 
+int _getByLogicalIndex__(DoublyLinkList* dLinkList, DoublyLinkListIndexType logical_ind 
+                      DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
+
 #define If_you_call_this_function_you_will_wake_up_very_angry_ahatina_and_she_will_want_to_kill_anyone_who_she_will_be_near_if_you_want_to_save_you_live_dont_do_stupid_action_if_you_think_she_is_slow_you_are_wrong_she_is_faster_than_meteor_it_is_you_choose(dLinkList) _If_you_call_this_function_you_will_wake_up_very_angry_ahatina_and_she_will_want_to_kill_anyone_who_she_will_be_near_if_you_want_to_save_you_live_dont_do_stupid_action_if_you_think_she_is_slow_you_are_wrong_she_is_faster_than_meteor_it_is_you_choose__(dLinkList DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__{LOCATION_VAR__(dLinkList)}))
 int _If_you_call_this_function_you_will_wake_up_very_angry_ahatina_and_she_will_want_to_kill_anyone_who_she_will_be_near_if_you_want_to_save_you_live_dont_do_stupid_action_if_you_think_she_is_slow_you_are_wrong_she_is_faster_than_meteor_it_is_you_choose__(DoublyLinkList* dLinkList DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call));
 

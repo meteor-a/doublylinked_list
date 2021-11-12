@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <time.h> 
+#include <filesystem>
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -15,8 +16,11 @@ const char* FILENAME_DUMP                  = "dump_file.html";
 
 
 #if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
-    const char* LOG_FILENAME_VISUAL        = "dump_doubly_link_list_visual.dot";
-    const char* LOG_FILENAME_VISUAL_PNG    = "dump_png/dump_doubly_link_list_visual.png";
+    const char* LOG_FILENAME_VISUAL             = "dump_doubly_link_list_visual.dot";
+    const char* FILENAME_PNG                    = "dump_dlink_list_";
+
+    const int SIZE_PNG_NAME              = 40;
+    const int SIZE_BUFFER_COMMAND_SYSTEM = 200;
 #endif
 
 /*----------------------------------------------------------------------------------------------*/
@@ -93,6 +97,8 @@ int AllocateLeaseMemory    (DoublyLinkList* dLinkList  DEBUG_CODE_ADD(, LOCATION
 int getEmptyIndex          (DoublyLinkList* dLinkList);
 int setEmptyIndex          (DoublyLinkList* dLinkList, DoublyLinkListIndexType index);
 bool _IsInizializeElem__   (DoublyLinkList* dLinkList, DoublyLinkListIndexType index);
+bool IsFileExists          (char *filename);
+int InsertPngDumpToLog     (FILE* dump_file);
 
 /*----------------------------------------------------------------------------------------------*/
 
@@ -133,7 +139,7 @@ int _DoublyLinkListConstructor__(DoublyLinkList* dLinkList, int capacity DEBUG_C
 
 int _InizializeList__(DoublyLinkList* dLinkList) {
     for (DoublyLinkListIndexType cur_elem = 0; cur_elem < dLinkList->capacity; ++cur_elem) {
-        dLinkList->list[cur_elem].data = DEFAULT_START_DATA;
+        dLinkList->list[cur_elem].data      = DEFAULT_START_DATA;
         dLinkList->list[cur_elem].next_elem = -1;
         dLinkList->list[cur_elem].prev_elem = -1;
     }
@@ -175,7 +181,7 @@ int _DoublyLinkListDestructor__(DoublyLinkList* dLinkList DEBUG_CODE_ADD(, LOCAT
 
 int _DeInizializeList__    (DoublyLinkList* dLinkList) {
     for (DoublyLinkListIndexType cur_elem = 0; cur_elem < dLinkList->capacity; ++cur_elem) {
-        dLinkList->list[cur_elem].data = DEFAULT_START_DATA;
+        dLinkList->list[cur_elem].data      = DEFAULT_START_DATA;
         dLinkList->list[cur_elem].next_elem = -1;
         dLinkList->list[cur_elem].prev_elem = -1;
     }
@@ -369,6 +375,29 @@ int AllocateLeaseMemory(DoublyLinkList* dLinkList  DEBUG_CODE_ADD(, LOCATION_VAR
     return _ERROR_CODE_SUCCESSFULL__;
 }
 
+int _getByLogicalIndex__(DoublyLinkList* dLinkList, DoublyLinkListIndexType logical_ind 
+                      DEBUG_CODE_ADD(, LOCATION_VAR_CALL_STRUCT__ info_call)) {
+
+    DoublyLinkListOK(dLinkList)
+    _WARNING_DOUBLY_LINK_LIST__(logical_ind > dLinkList->size, _WARN_CODE_INCORRECT_LOGICAL_INDEX__,
+                                 _WARN_TEXT_INCORRECT_LOGICAL_INDEX__)  
+
+    if (dLinkList->is_sorted) {
+        return logical_ind;
+    } else {
+        DoublyLinkListIndexType cur_ind = dLinkList->head;
+        int count = 1;
+        while (count < logical_ind) {
+            cur_ind = dLinkList->list[cur_ind].next_elem;
+            ++count;
+        }
+
+        return cur_ind;
+    }
+
+    return -1;
+}
+
 /*----------------------------------------------------------------------------------------------*/
 
 int getEmptyIndex(DoublyLinkList* dLinkList) {
@@ -419,8 +448,6 @@ _ERROR_INFO__ _DoublyLinkListOK__(DoublyLinkList* dLinkList) {
         err.err_code = _ERROR_CODE_INCORERCT_DATA_IN_ZERO_INDEX__;
         err.text_err = _ERROR_TEXT_INCORERCT_DATA_IN_ZERO_INDEX__;
     }
-
-    // долгие проверки
 
     return err;
 }
@@ -497,6 +524,11 @@ int _If_you_call_this_function_you_will_wake_up_very_angry_ahatina_and_she_will_
 
 /*----------------------------------------------------------------------------------------------*/
 
+bool IsFileExists(char *filename) {
+  struct stat   buffer;   
+  return (stat (filename, &buffer) == 0);
+}
+
 #if DEBUG_MODE_DOUBLY_LINK_LIST == _DEBUG_MODE_DOUBLY_LINK_LIST_ON__
 
 int CreateDump(DoublyLinkList* dLinkList) {
@@ -518,11 +550,28 @@ int CreateDump(DoublyLinkList* dLinkList) {
     fprintf(dump_file, "\n<pre>\n");
 #if DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST == _DEBUG_MODE_VISUAL_DOUBLY_LINK_LIST_ON__
     CreateVisualDump(dLinkList);
-    system("dot .\\dump_doubly_link_list_visual.dot -T png -o dump_png/dump_doubly_link_list_visual.png");
-    fprintf(dump_file, "<p><img src=\"%s\" alt=\"Письма мастера дзен\"></p>", LOG_FILENAME_VISUAL_PNG);
+    InsertPngDumpToLog(dump_file);
 #endif
     fprintf(dump_file, "----------------------------------------------------------------------------------------------------------\n");
     fclose(dump_file);
+    return _ERROR_CODE_SUCCESSFULL__;
+}
+
+int InsertPngDumpToLog(FILE* dump_file) {
+    _WARNING_DOUBLY_LINK_LIST__(dump_file == nullptr, _WARN_CODE_CANT_OPEN_DUMP_FILE__, _WARN_TEXT_CANT_OPEN_DUMP_FILE__);
+
+    for (int cur_ind_file = 1; cur_ind_file < 100; ++cur_ind_file) {
+        char png_name[SIZE_PNG_NAME] = "";
+        snprintf(png_name, sizeof(png_name), "dump_png/%s%03d.png", FILENAME_PNG, cur_ind_file); 
+        if (!IsFileExists(png_name)) {
+            char buffer_cmd[SIZE_BUFFER_COMMAND_SYSTEM] = "";
+            snprintf(buffer_cmd, sizeof(buffer_cmd), "dot .\\dump_doubly_link_list_visual.dot -T png -o %s", png_name);
+            system(buffer_cmd);
+            fprintf(dump_file, "<p><img src=\"%s\" alt=\"Смотри и радуйся\"></p>", png_name);
+            break;
+        }
+    }
+
     return _ERROR_CODE_SUCCESSFULL__;
 }
 
@@ -572,10 +621,10 @@ int CreateVisualDump(DoublyLinkList* dLinkList) {
 
     for (int cur_node = 1; cur_node < dLinkList->capacity; ++cur_node) {
         fprintf(graph_file, "   %s%d->%s%d[color=\"%s\", constraint=false];\n", default_name_node, cur_node, default_name_node, 
-                dLinkList->list[cur_node].next_elem, ((dLinkList->list[cur_node].prev_elem == -1) ? "forestgreen" : "red"));
+                dLinkList->list[cur_node].next_elem, ((dLinkList->list[cur_node].prev_elem == -1) ? "forestgreen" : "gold1"));
         if (dLinkList->list[cur_node].prev_elem != -1) {
             fprintf(graph_file, "   %s%d->%s%d[color=\"%s\", constraint=false];\n", default_name_node, cur_node, default_name_node, 
-                    dLinkList->list[cur_node].prev_elem, "red");
+                    dLinkList->list[cur_node].prev_elem, "blue");
         }
     }
 

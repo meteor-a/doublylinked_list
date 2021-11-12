@@ -28,19 +28,21 @@ const char* _ERROR_TEXT_INCORERCT_DATA_IN_ZERO_INDEX__ = "Incorrect data in zero
 
 /*----------------------------------------------------------------------------------------------*/
 
-const int _WARN_CODE_REPEAT_CONSTRUCTOR__   = 101;
-const int _WARN_CODE_PUSH_INCORRECT_INDEX__ = 102;
-const int _WARN_CODE_POP_ON_EMPTY_LIST__    = 103;
-const int _WARN_CODE_POP_INCORRECT_INDEX__  = 104;
-const int _WARN_CODE_CANT_OPEN_DUMP_FILE__  = 105;
+const int _WARN_CODE_REPEAT_CONSTRUCTOR__      = 101;
+const int _WARN_CODE_PUSH_INCORRECT_INDEX__    = 102;
+const int _WARN_CODE_POP_ON_EMPTY_LIST__       = 103;
+const int _WARN_CODE_POP_INCORRECT_INDEX__     = 104;
+const int _WARN_CODE_CANT_OPEN_DUMP_FILE__     = 105;
+const int _WARN_CODE_INCORRECT_LOGICAL_INDEX__ = 106;
 
 /*----------------------------------------------------------------------------------------------*/
 
-const char* _WARN_TEXT_REPEAT_CONSTRUCTOR__ = "Repeat constructor";
-const char* _WARN_TEXT_PUSH_INCORRECT_INDEX__ = "Incorect index to push";
-const char* _WARN_TEXT_POP_ON_EMPTY_LIST__    = "Try to pop on empty doubly linked list";
-const char* _WARN_TEXT_POP_INCORRECT_INDEX__  = "Try to pop on incorect index";
-const char* _WARN_TEXT_CANT_OPEN_DUMP_FILE__  = "Cant open dump file to write";
+const char* _WARN_TEXT_REPEAT_CONSTRUCTOR__      = "Repeat constructor";
+const char* _WARN_TEXT_PUSH_INCORRECT_INDEX__    = "Incorect index to push";
+const char* _WARN_TEXT_POP_ON_EMPTY_LIST__       = "Try to pop on empty doubly linked list";
+const char* _WARN_TEXT_POP_INCORRECT_INDEX__     = "Try to pop on incorect index";
+const char* _WARN_TEXT_CANT_OPEN_DUMP_FILE__     = "Cant open dump file to write";
+const char* _WARN_TEXT_INCORRECT_LOGICAL_INDEX__ = "Incorrect logical index";
 
 /*----------------------------------------------------------------------------------------------*/
 
